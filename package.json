@@ -1,0 +1,14 @@
+{
+  "name": "simply-labyrinths-web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vitest": "^0.29.2"
+  }
+}

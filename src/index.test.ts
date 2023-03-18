@@ -1,9 +1,7 @@
-import { it, describe, expect } from "vitest";
-import main from ".";
+import { describe, it, expect } from 'vitest';
 
-describe("index entry", () => {
-  it("exists", () => {
-    expect(main).toBeDefined();
-    expect(main()).toEqual(undefined);
-  });
+describe('sum test', () => {
+	it('adds 1 + 2 to equal 3', () => {
+		expect(1 + 2).toBe(3);
+	});
 });

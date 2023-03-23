@@ -9,8 +9,6 @@ export default function sidewinder(grid: Grid) {
 		row.forEach((cell) => {
 			run.push(cell);
 
-			console.log(run);
-
 			const atEasternBoundary = !cell.east;
 			const atNorthernBoundary = !cell.north;
 

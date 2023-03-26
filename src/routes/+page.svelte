@@ -1,16 +1,17 @@
 <script>
-	import Grid from '../grid';
-	import sidewinder from '../sidewinder';
-	import longestPath from '../longestPath';
+	import Grid from '../model/grid';
+	import sidewinder from '../model/sidewinder';
+	import longestPath from '../model/longestPath';
 
 	const debug = false;
-	const rows = 30;
-	const columns = 30;
-	const maze = sidewinder(new Grid(rows, columns));
-	const startAndEnd = longestPath(maze);
 	const cellSize = 30;
-	const visitedCells = new Map();
 
+	let rows = 5;
+	let columns = 5;
+	let maze = sidewinder(new Grid(rows, columns));
+	let startAndEnd = longestPath(maze);
+	let visitedCells = new Map();
+	let level = 1;
 	let score = 0;
 	let scoreDelta = 0;
 
@@ -21,7 +22,25 @@
 		y: startAndEnd[0].row
 	};
 
-	const distances = maze.cells[0].distances();
+	let distances = maze.cells[0].distances();
+
+	const reset = () => {
+		rows += 5;
+		columns += 5;
+		maze = sidewinder(new Grid(rows, columns));
+		startAndEnd = longestPath(maze);
+		visitedCells = new Map();
+		level += 1;
+
+		visitedCells.set(startAndEnd[0].id, 1);
+
+		const cursor = {
+			x: startAndEnd[0].column,
+			y: startAndEnd[0].row
+		};
+
+		distances = maze.cells[0].distances();
+	};
 
 	const onKeyDown = (/** @type {KeyboardEvent} */ event) => {
 		const cell = maze.grid[cursor.y][cursor.x];
@@ -54,10 +73,18 @@
 
 			score += scoreDelta;
 		}
+
+		if (cursor.x === startAndEnd[1].column && cursor.y === startAndEnd[1].row) {
+			reset();
+		}
 	};
 </script>
 
-<h1>Simply Labyrinths</h1>
+<header class="header">
+	<div />
+	<h1>Simply Labyrinths</h1>
+	<p>Level {level}</p>
+</header>
 
 <svelte:window on:keydown={onKeyDown} />
 
@@ -206,5 +233,10 @@
 
 	.score-info p.positive {
 		color: #009900;
+	}
+
+	.header {
+		justify-content: space-between;
+		display: flex;
 	}
 </style>

@@ -86,100 +86,123 @@
 
 <svelte:window on:keydown={onKeyDown} />
 
-<div class="score-info">
-	<p />
-	<p class="score">{score}</p>
+<div class="main">
+	<div class="aside" />
+	<div class="main-body">
+		<div class="score-info">
+			<div />
+			<p class="score">{score}</p>
 
-	{#if scoreDelta > 0}
-		<p class="score-delta positive">
-			+{scoreDelta}
-		</p>
-	{/if}
-	{#if scoreDelta < 0}
-		<p class="score-delta negative">
-			{scoreDelta}
-		</p>
-	{/if}
-	{#if scoreDelta === 0}
-		<p />
-	{/if}
-</div>
+			{#if scoreDelta > 0}
+				<p class="score-delta positive">
+					+{scoreDelta}
+				</p>
+			{/if}
+			{#if scoreDelta < 0}
+				<p class="score-delta negative">
+					{scoreDelta}
+				</p>
+			{/if}
+			{#if scoreDelta === 0}
+				<div />
+			{/if}
+		</div>
 
-<svg
-	viewBox="-5 -5 {cellSize * columns + 10} {cellSize * rows + 10}"
-	class="maze"
-	style="margin: 0 auto; display: block"
->
-	<circle
-		class="cursor"
-		cx={(cursor.x + 1) * cellSize - cellSize / 2}
-		cy={(cursor.y + 1) * cellSize - cellSize / 2}
-		r="7"
-		fill="#990000"
-	/>
-	{#each maze.cells as cell}
-		{#if !cell.north || (cell.north && !cell.linked(cell.north))}
-			<line
-				x1={cell.column * cellSize}
-				y1={cell.row * cellSize}
-				x2={cell.column * cellSize + cellSize}
-				y2={cell.row * cellSize}
-				stroke="black"
-				stroke-width="3"
-				stroke-linecap="square"
-			/>
-		{/if}
-		{#if !cell.east || (cell.east && !cell.linked(cell.east))}
-			<line
-				stroke-width="3"
-				x1={cell.column * cellSize + cellSize}
-				y1={cell.row * cellSize}
-				x2={cell.column * cellSize + cellSize}
-				y2={cell.row * cellSize + cellSize}
-				stroke="black"
-				stroke-linecap="square"
-			/>
-		{/if}
-		{#if !cell.west || (cell.west && !cell.linked(cell.west))}
-			<line
-				stroke-width="3"
-				x1={cell.column * cellSize}
-				y1={cell.row * cellSize}
-				x2={cell.column * cellSize}
-				y2={cell.row * cellSize + cellSize}
-				stroke="black"
-				stroke-linecap="square"
-			/>
-		{/if}
-		{#if !cell.south || (cell.south && !cell.linked(cell.south))}
-			<line
-				stroke-width="3"
-				x1={cell.column * cellSize}
-				y1={cell.row * cellSize + cellSize}
-				x2={cell.column * cellSize + cellSize}
-				y2={cell.row * cellSize + cellSize}
-				stroke="black"
-				stroke-linecap="square"
-			/>
-		{/if}
-		{#if cell.id === startAndEnd[1].id}
+		<svg
+			viewBox="-5 -5 {cellSize * columns + 10} {cellSize * rows + 10}"
+			class="maze"
+			style="margin: 0 auto; display: block"
+		>
 			<circle
-				cx={(cell.column + 1) * cellSize - cellSize / 2}
-				cy={(cell.row + 1) * cellSize - cellSize / 2}
+				class="cursor"
+				cx={(cursor.x + 1) * cellSize - cellSize / 2}
+				cy={(cursor.y + 1) * cellSize - cellSize / 2}
 				r="7"
-				fill="#009900"
+				fill="#990000"
 			/>
-		{/if}
-		{#if debug}
-			<text
-				x={cell.column * cellSize + cellSize / 2 - 5}
-				y={cell.row * cellSize + cellSize / 2 + 5}
-			>
-				{distances.cells.get(cell)}
-			</text>
-		{/if}
-	{/each}
-</svg>
+			{#each maze.cells as cell}
+				{#if !cell.north || (cell.north && !cell.linked(cell.north))}
+					<line
+						x1={cell.column * cellSize}
+						y1={cell.row * cellSize}
+						x2={cell.column * cellSize + cellSize}
+						y2={cell.row * cellSize}
+						stroke="black"
+						stroke-width="3"
+						stroke-linecap="square"
+					/>
+				{/if}
+				{#if !cell.east || (cell.east && !cell.linked(cell.east))}
+					<line
+						stroke-width="3"
+						x1={cell.column * cellSize + cellSize}
+						y1={cell.row * cellSize}
+						x2={cell.column * cellSize + cellSize}
+						y2={cell.row * cellSize + cellSize}
+						stroke="black"
+						stroke-linecap="square"
+					/>
+				{/if}
+				{#if !cell.west || (cell.west && !cell.linked(cell.west))}
+					<line
+						stroke-width="3"
+						x1={cell.column * cellSize}
+						y1={cell.row * cellSize}
+						x2={cell.column * cellSize}
+						y2={cell.row * cellSize + cellSize}
+						stroke="black"
+						stroke-linecap="square"
+					/>
+				{/if}
+				{#if !cell.south || (cell.south && !cell.linked(cell.south))}
+					<line
+						stroke-width="3"
+						x1={cell.column * cellSize}
+						y1={cell.row * cellSize + cellSize}
+						x2={cell.column * cellSize + cellSize}
+						y2={cell.row * cellSize + cellSize}
+						stroke="black"
+						stroke-linecap="square"
+					/>
+				{/if}
+				{#if cell.id === startAndEnd[1].id}
+					<circle
+						cx={(cell.column + 1) * cellSize - cellSize / 2}
+						cy={(cell.row + 1) * cellSize - cellSize / 2}
+						r="7"
+						fill="#009900"
+					/>
+				{/if}
+				{#if debug}
+					<text
+						x={cell.column * cellSize + cellSize / 2 - 5}
+						y={cell.row * cellSize + cellSize / 2 + 5}
+					>
+						{distances.cells.get(cell)}
+					</text>
+				{/if}
+			{/each}
+		</svg>
+	</div>
+	<div class="aside">
+		<p>
+			Master the art of maze navigation with Simply Labyrinths, the captivating online maze game!
+		</p>
+		<p>Follow these simple steps to succeed:</p>
+
+		<ul>
+			<li>Move the red circle towards the green circle using your keyboard's arrow keys.</li>
+			<li>Progress through the labyrinth while collecting points for a higher score.</li>
+			<li>
+				Be strategic and avoid revisiting the same spot, as this will result in point deductions.
+			</li>
+		</ul>
+		<p>
+			Stay focused and skillfully guide your way through the enthralling labyrinths for an
+			unparalleled gaming experience!
+		</p>
+	</div>
+</div>
 
 <style>
 	h1 {
@@ -194,6 +217,27 @@
 
 	svg {
 		filter: drop-shadow(5px 5px 7px rgb(00 55 99));
+	}
+
+	p,
+	ul,
+	li {
+		font-size: 1rem;
+		font-family: 'Roboto', Arial, Helvetica, sans-serif;
+	}
+
+	p {
+		margin-top: 0;
+		margin-bottom: 1rem;
+	}
+
+	li {
+		margin-bottom: 0.5rem;
+	}
+
+	.main {
+		display: flex;
+		justify-content: space-between;
 	}
 
 	.maze {
@@ -236,5 +280,17 @@
 	.header {
 		justify-content: space-between;
 		display: flex;
+	}
+
+	.header p {
+		font-family: Arial, Helvetica, sans-serif;
+	}
+
+	.main-body {
+		width: 60%;
+	}
+
+	.aside {
+		width: 20%;
 	}
 </style>

@@ -34,10 +34,8 @@
 
 		visitedCells.set(startAndEnd[0].id, 1);
 
-		const cursor = {
-			x: startAndEnd[0].column,
-			y: startAndEnd[0].row
-		};
+		cursor.x = startAndEnd[0].column;
+		cursor.y = startAndEnd[0].row;
 
 		distances = maze.cells[0].distances();
 	};

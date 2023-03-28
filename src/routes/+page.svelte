@@ -1,6 +1,6 @@
 <script>
 	import Grid from '../model/grid';
-	import sidewinder from '../model/sidewinder';
+	import wilson from '../model/wilson';
 	import longestPath from '../model/longestPath';
 
 	const debug = false;
@@ -8,7 +8,7 @@
 
 	let rows = 5;
 	let columns = 5;
-	let maze = sidewinder(new Grid(rows, columns));
+	let maze = wilson(new Grid(rows, columns));
 	let startAndEnd = longestPath(maze);
 	let visitedCells = new Map();
 	let level = 1;
@@ -27,7 +27,7 @@
 	const reset = () => {
 		rows += 5;
 		columns += 5;
-		maze = sidewinder(new Grid(rows, columns));
+		maze = wilson(new Grid(rows, columns));
 		startAndEnd = longestPath(maze);
 		visitedCells = new Map();
 		level += 1;

@@ -198,8 +198,8 @@
 			</li>
 		</ul>
 		<p>
-			Stay focused and skillfully guide your way through the enthralling labyrinths for an
-			unparalleled gaming experience!
+			Stay focused and skillfully guide your way through the labyrinths for an unparalleled gaming
+			experience!
 		</p>
 	</div>
 </div>

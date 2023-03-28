@@ -81,7 +81,8 @@ export default class Cell {
 					if (distances.cells.get(linked.cell) !== undefined) {
 						return;
 					}
-					distances.cells.set(linked.cell, (distances.cells.get(cell) as number) + 1);
+
+					distances.setCellDistance(linked.cell, (distances.cells.get(cell) as number) + 1);
 					newFrontier.push(linked.cell);
 				});
 			});

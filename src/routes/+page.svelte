@@ -87,10 +87,10 @@
 <svelte:window on:keydown={onKeyDown} />
 
 <div class="main">
-	<div class="aside" />
+	<div />
 	<div class="main-body">
 		<div class="score-info">
-			<div />
+			<div class="aside" />
 			<p class="score">{score}</p>
 
 			{#if scoreDelta > 0}
@@ -184,7 +184,7 @@
 			{/each}
 		</svg>
 	</div>
-	<div class="aside">
+	<div class="aside xs-mt-1">
 		<p>
 			Master the art of maze navigation with Simply Labyrinths, the captivating online maze game!
 		</p>
@@ -197,6 +197,7 @@
 				Be strategic and avoid revisiting the same spot, as this will result in point deductions.
 			</li>
 		</ul>
+
 		<p>
 			Stay focused and skillfully guide your way through the labyrinths for an unparalleled gaming
 			experience!
@@ -206,17 +207,13 @@
 
 <style>
 	h1 {
-		font-size: 2.5rem;
+		font-size: 1.8rem;
 		text-align: center;
 		font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 		text-transform: uppercase;
 		font-weight: 600;
 		margin: 0;
 		margin-bottom: 1rem;
-	}
-
-	svg {
-		filter: drop-shadow(5px 5px 7px rgb(00 55 99));
 	}
 
 	p,
@@ -235,38 +232,10 @@
 		margin-bottom: 0.5rem;
 	}
 
-	.main {
-		display: flex;
-		justify-content: space-between;
-	}
-
-	.maze {
-		height: 80vh;
-	}
-
-	.score {
-		margin: 0;
-		font-family: sans-serif;
+	.header p {
+		font-family: Arial, Helvetica, sans-serif;
 		text-align: center;
-		font-size: 1.5rem;
-	}
-
-	.cursor {
-		box-shadow: inset 3px 3px 3px rgb(33 00 00);
-	}
-
-	.score-info {
-		display: flex;
-		justify-content: space-between;
-		width: 75vh;
-		margin: 0 auto;
-	}
-
-	.score-info p {
-		margin: 0;
-		font-family: sans-serif;
-		text-align: center;
-		font-size: 1.5rem;
+		margin-bottom: 1rem;
 	}
 
 	.score-info p.negative {
@@ -277,20 +246,84 @@
 		color: #009900;
 	}
 
-	.header {
-		justify-content: space-between;
+	.score-info {
 		display: flex;
+		justify-content: space-between;
+		margin: 0 auto;
 	}
 
-	.header p {
-		font-family: Arial, Helvetica, sans-serif;
+	.score-info > p {
+		margin: 0;
+		font-family: sans-serif;
+		text-align: center;
+		font-size: 1.5rem;
+		width: 30%;
 	}
 
-	.main-body {
-		width: 60%;
+	.score-info > p:last-child {
+		text-align: right;
+	}
+
+	.score-info > div {
+		width: 30%;
 	}
 
 	.aside {
-		width: 20%;
+		width: 100%;
+	}
+
+	.xs-mt-1 {
+		margin-top: 1rem;
+	}
+
+	@media (min-width: 361px) {
+		h1 {
+			font-size: 2.5rem;
+		}
+
+		.xs-mt-1 {
+			margin-top: unset;
+		}
+
+		.main {
+			display: flex;
+			justify-content: space-between;
+		}
+
+		.maze {
+			height: 80vh;
+		}
+
+		.score {
+			margin: 0;
+			font-family: sans-serif;
+			text-align: center;
+			font-size: 1.5rem;
+		}
+
+		.cursor {
+			box-shadow: inset 3px 3px 3px rgb(33 00 00);
+		}
+
+		.score-info {
+			display: flex;
+			justify-content: space-between;
+			width: 75vh;
+			margin: 0 auto;
+		}
+
+		.header {
+			justify-content: space-between;
+			display: flex;
+		}
+
+		.main-body {
+			width: 60%;
+		}
+
+		.aside {
+			margin-top: 0;
+			width: 20%;
+		}
 	}
 </style>

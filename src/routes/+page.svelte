@@ -87,7 +87,8 @@
 <svelte:window on:keydown={onKeyDown} />
 
 <div class="main">
-	<div />
+	<div class="aside" />
+
 	<div class="main-body">
 		<div class="score-info">
 			<div class="aside" />
@@ -276,13 +277,15 @@
 		margin-top: 1rem;
 	}
 
-	@media (min-width: 361px) {
-		h1 {
-			font-size: 2.5rem;
-		}
-
+	@media (min-width: 640px) {
 		.xs-mt-1 {
 			margin-top: unset;
+		}
+	}
+
+	@media (min-width: 1025px) {
+		h1 {
+			font-size: 2.5rem;
 		}
 
 		.main {
@@ -291,7 +294,7 @@
 		}
 
 		.maze {
-			height: 80vh;
+			width: 60%;
 		}
 
 		.score {
@@ -308,7 +311,6 @@
 		.score-info {
 			display: flex;
 			justify-content: space-between;
-			width: 75vh;
 			margin: 0 auto;
 		}
 

@@ -186,23 +186,25 @@
 		</svg>
 	</div>
 	<div class="aside xs-mt-1">
-		<p>
-			Master the art of maze navigation with Simply Labyrinths, the captivating online maze game!
-		</p>
-		<p>Follow these simple steps to succeed:</p>
+		{#if level === 1}
+			<p>
+				Master the art of maze navigation with Simply Labyrinths, the captivating online maze game!
+			</p>
+			<p>Follow these simple steps to succeed:</p>
 
-		<ul>
-			<li>Move the red circle towards the green circle using your keyboard's arrow keys.</li>
-			<li>Progress through the labyrinth while collecting points for a higher score.</li>
-			<li>
-				Be strategic and avoid revisiting the same spot, as this will result in point deductions.
-			</li>
-		</ul>
+			<ul>
+				<li>Move the red circle towards the green circle using your keyboard's arrow keys.</li>
+				<li>Progress through the labyrinth while collecting points for a higher score.</li>
+				<li>
+					Be strategic and avoid revisiting the same spot, as this will result in point deductions.
+				</li>
+			</ul>
 
-		<p>
-			Stay focused and skillfully guide your way through the labyrinths for an unparalleled gaming
-			experience!
-		</p>
+			<p>
+				Stay focused and skillfully guide your way through the labyrinths for an unparalleled gaming
+				experience!
+			</p>
+		{/if}
 	</div>
 </div>
 

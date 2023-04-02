@@ -277,6 +277,10 @@
 		margin-top: 1rem;
 	}
 
+	.score-info {
+		padding: 0 1rem;
+	}
+
 	@media (min-width: 640px) {
 		.xs-mt-1 {
 			margin-top: unset;
@@ -294,7 +298,7 @@
 		}
 
 		.maze {
-			width: 60%;
+			width: 100%;
 		}
 
 		.score {

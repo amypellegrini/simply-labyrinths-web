@@ -40,22 +40,22 @@
 		distances = maze.cells[0].distances();
 	};
 
-	const onKeyDown = (/** @type {KeyboardEvent} */ event) => {
+	const moveCursor = (/** @type {string} */ direction) => {
 		const cell = maze.grid[cursor.y][cursor.x];
 
-		if (event.key === 'ArrowRight' && cell.east && cell.linked(cell.east)) {
+		if (direction === 'right' && cell.east && cell.linked(cell.east)) {
 			cursor.x += 1;
 		}
 
-		if (event.key === 'ArrowLeft' && cell.west && cell.linked(cell.west)) {
+		if (direction === 'left' && cell.west && cell.linked(cell.west)) {
 			cursor.x -= 1;
 		}
 
-		if (event.key === 'ArrowDown' && cell.south && cell.linked(cell.south)) {
+		if (direction === 'down' && cell.south && cell.linked(cell.south)) {
 			cursor.y += 1;
 		}
 
-		if (event.key === 'ArrowUp' && cell.north && cell.linked(cell.north)) {
+		if (direction === 'up' && cell.north && cell.linked(cell.north)) {
 			cursor.y -= 1;
 		}
 
@@ -76,6 +76,82 @@
 			reset();
 		}
 	};
+
+	const onKeyDown = (/** @type {KeyboardEvent} */ event) => {
+		if (event.key === 'ArrowRight') {
+			moveCursor('right');
+		}
+
+		if (event.key === 'ArrowLeft') {
+			moveCursor('left');
+		}
+
+		if (event.key === 'ArrowDown') {
+			moveCursor('down');
+		}
+
+		if (event.key === 'ArrowUp') {
+			moveCursor('up');
+		}
+	};
+
+	/**
+	 * @type {number}
+	 */
+	let touchStartX;
+	/**
+	 * @type {number}
+	 */
+	let touchStartY;
+
+	/**
+	 * @type {number}
+	 */
+	let touchEndX;
+
+	/**
+	 * @type {number}
+	 */
+	let touchEndY;
+
+	const minSwipeDistance = 100;
+
+	const validateSwipe = () => {
+		const deltaX = touchEndX - touchStartX;
+		const deltaY = touchEndY - touchStartY;
+
+		if (Math.abs(deltaX) > minSwipeDistance || Math.abs(deltaY) > minSwipeDistance) {
+			if (Math.abs(deltaX) > Math.abs(deltaY)) {
+				if (deltaX > 0) {
+					moveCursor('right');
+				} else {
+					moveCursor('left');
+				}
+			} else {
+				if (deltaY > 0) {
+					moveCursor('down');
+				} else {
+					moveCursor('up');
+				}
+			}
+		}
+	};
+
+	const onTouch = (/** @type {TouchEvent} */ event) => {
+		switch (event.type) {
+			case 'touchstart':
+				touchStartX = event.touches[0].clientX;
+				touchStartY = event.touches[0].clientY;
+				break;
+			case 'touchend':
+				touchEndX = event.changedTouches[0].clientX;
+				touchEndY = event.changedTouches[0].clientY;
+				validateSwipe();
+				break;
+			default:
+				break;
+		}
+	};
 </script>
 
 <header class="header">
@@ -84,7 +160,7 @@
 	<p>Level {level}</p>
 </header>
 
-<svelte:window on:keydown={onKeyDown} />
+<svelte:window on:keydown={onKeyDown} on:touchstart={onTouch} on:touchend={onTouch} />
 
 <div class="main">
 	<div class="aside" />

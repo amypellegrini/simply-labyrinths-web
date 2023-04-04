@@ -114,7 +114,7 @@
 	 */
 	let touchEndY;
 
-	const minSwipeDistance = 100;
+	const minSwipeDistance = 50;
 
 	const validateSwipe = () => {
 		const deltaX = touchEndX - touchStartX;
@@ -138,6 +138,8 @@
 	};
 
 	const onTouch = (/** @type {TouchEvent} */ event) => {
+		event.preventDefault();
+
 		switch (event.type) {
 			case 'touchstart':
 				touchStartX = event.touches[0].clientX;
@@ -160,7 +162,7 @@
 	<p>Level {level}</p>
 </header>
 
-<svelte:window on:keydown={onKeyDown} on:touchstart={onTouch} on:touchend={onTouch} />
+<svelte:window on:keydown={onKeyDown} />
 
 <div class="main">
 	<div class="aside" />
@@ -189,6 +191,8 @@
 			viewBox="-5 -5 {cellSize * columns + 10} {cellSize * rows + 10}"
 			class="maze"
 			style="margin: 0 auto; display: block"
+			on:touchstart={onTouch}
+			on:touchend={onTouch}
 		>
 			<circle
 				class="cursor"
@@ -269,7 +273,10 @@
 			<p>Follow these simple steps to succeed:</p>
 
 			<ul>
-				<li>Move the red circle towards the green circle using your keyboard's arrow keys.</li>
+				<li>
+					Move the red circle towards the green circle using your keyboard's arrow keys (or swipe
+					over the maze if using a mobile device).
+				</li>
 				<li>Progress through the labyrinth while collecting points for a higher score.</li>
 				<li>
 					Be strategic and avoid revisiting the same spot, as this will result in point deductions.

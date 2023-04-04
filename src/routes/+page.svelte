@@ -99,6 +99,7 @@
 	 * @type {number}
 	 */
 	let touchStartX;
+
 	/**
 	 * @type {number}
 	 */
@@ -366,6 +367,15 @@
 		padding: 0 1rem;
 	}
 
+	.main-body {
+		max-width: 80vh;
+	}
+
+	.maze {
+		width: 100%;
+		max-height: 80vh;
+	}
+
 	@media (min-width: 640px) {
 		.xs-mt-1 {
 			margin-top: unset;
@@ -380,10 +390,6 @@
 		.main {
 			display: flex;
 			justify-content: space-between;
-		}
-
-		.maze {
-			width: 100%;
 		}
 
 		.score {

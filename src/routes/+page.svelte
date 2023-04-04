@@ -70,10 +70,45 @@
 			}
 
 			score += scoreDelta;
+
+			if (newCell.links.size === 2) {
+				const oppositeDirection = {
+					right: 'left',
+					left: 'right',
+					down: 'up',
+					up: 'down'
+				}[direction];
+
+				if (oppositeDirection !== 'up' && newCell.north && newCell.linked(newCell.north)) {
+					setTimeout(() => {
+						moveCursor('up');
+					}, 100);
+				}
+
+				if (oppositeDirection !== 'down' && newCell.south && newCell.linked(newCell.south)) {
+					setTimeout(() => {
+						moveCursor('down');
+					}, 100);
+				}
+
+				if (oppositeDirection !== 'left' && newCell.west && newCell.linked(newCell.west)) {
+					setTimeout(() => {
+						moveCursor('left');
+					}, 100);
+				}
+
+				if (oppositeDirection !== 'right' && newCell.east && newCell.linked(newCell.east)) {
+					setTimeout(() => {
+						moveCursor('right');
+					}, 100);
+				}
+			}
 		}
 
 		if (cursor.x === startAndEnd[1].column && cursor.y === startAndEnd[1].row) {
-			reset();
+			setTimeout(() => {
+				reset();
+			}, 500);
 		}
 	};
 
@@ -195,13 +230,6 @@
 			on:touchstart={onTouch}
 			on:touchend={onTouch}
 		>
-			<circle
-				class="cursor"
-				cx={(cursor.x + 1) * cellSize - cellSize / 2}
-				cy={(cursor.y + 1) * cellSize - cellSize / 2}
-				r="7"
-				fill="#990000"
-			/>
 			{#each maze.cells as cell}
 				{#if !cell.north || (cell.north && !cell.linked(cell.north))}
 					<line
@@ -264,6 +292,13 @@
 					</text>
 				{/if}
 			{/each}
+			<circle
+				class="cursor"
+				cx={(cursor.x + 1) * cellSize - cellSize / 2}
+				cy={(cursor.y + 1) * cellSize - cellSize / 2}
+				r="7"
+				fill="#990000"
+			/>
 		</svg>
 	</div>
 	<div class="aside xs-mt-1">

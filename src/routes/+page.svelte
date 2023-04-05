@@ -5,6 +5,7 @@
 
 	const debug = false;
 	const cellSize = 30;
+	const rowsAndColumnsDelta = 3;
 
 	let rows = 5;
 	let columns = 5;
@@ -25,8 +26,8 @@
 	let distances = maze.cells[0].distances();
 
 	const reset = () => {
-		rows += 5;
-		columns += 5;
+		rows += rowsAndColumnsDelta;
+		columns += rowsAndColumnsDelta;
 		maze = wilson(new Grid(rows, columns));
 		startAndEnd = longestPath(maze);
 		visitedCells = new Map();

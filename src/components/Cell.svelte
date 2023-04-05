@@ -8,7 +8,10 @@
 {#if !cell.north || (cell.north && !cell.linked(cell.north))}
 	<line
 		data-testid="cell-wall-north"
-		x1={0}
+		x1={cell.column * cellSize}
+		y1={cell.row * cellSize}
+		x2={cell.column * cellSize + cellSize}
+		y2={cell.row * cellSize}
 		stroke="black"
 		stroke-width="3"
 		stroke-linecap="square"

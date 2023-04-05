@@ -38,8 +38,13 @@ describe('Cell', () => {
 		expect(screen.queryAllByTestId(/cell-wall/).length).toBe(0);
 	});
 
-	test('north wall properties', () => {
-		const cell = new CellModel(0, 0);
+	test.each([
+		[0, 0, '0', '0', '10', '0'],
+		[0, 1, '10', '0', '20', '0'],
+		[1, 0, '0', '10', '10', '10'],
+		[1, 1, '10', '10', '20', '10']
+	])('north wall properties', (rows, columns, x1, y1, x2, y2) => {
+		const cell = new CellModel(rows, columns);
 
 		render(Cell, { cell, cellSize: 10 });
 
@@ -48,7 +53,10 @@ describe('Cell', () => {
 		expect(northWall).toHaveAttribute('stroke', 'black');
 		expect(northWall).toHaveAttribute('stroke-width', '3');
 		expect(northWall).toHaveAttribute('stroke-linecap', 'square');
-		expect(northWall).toHaveAttribute('x1', '0');
+		expect(northWall).toHaveAttribute('x1', x1);
+		expect(northWall).toHaveAttribute('y1', y1);
+		expect(northWall).toHaveAttribute('x2', x2);
+		expect(northWall).toHaveAttribute('y2', y2);
 		expect(northWall.tagName).toBe('line');
 	});
 });

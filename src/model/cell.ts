@@ -16,7 +16,7 @@ export default class Cell {
 	east?: Cell;
 
 	constructor(row: number, column: number) {
-		this.id = `${row}${column}`;
+		this.id = `${row}-${column}`;
 		this.row = row;
 		this.column = column;
 		this.links = new Map();

@@ -151,7 +151,7 @@
 	 */
 	let touchEndY;
 
-	const minSwipeDistance = 50;
+	const minSwipeDistance = 25;
 
 	const validateSwipe = () => {
 		const deltaX = touchEndX - touchStartX;

@@ -1,4 +1,3 @@
-import { NVM_DIR } from '$env/static/private';
 import { describe, it, expect } from 'vitest';
 import Cell from './cell';
 import Distances from './distances';

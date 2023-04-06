@@ -59,4 +59,26 @@ describe('Cell', () => {
 		expect(northWall).toHaveAttribute('y2', y2);
 		expect(northWall.tagName).toBe('line');
 	});
+
+	test.each([
+		[0, 0, '0', '10', '10', '10'],
+		[0, 1, '10', '10', '20', '10'],
+		[1, 0, '0', '20', '10', '20'],
+		[1, 1, '10', '20', '20', '20']
+	])('south wall properties', (rows, columns, x1, y1, x2, y2) => {
+		const cell = new CellModel(rows, columns);
+
+		render(Cell, { cell, cellSize: 10 });
+
+		const southWall = screen.getByTestId('cell-wall-south');
+
+		expect(southWall).toHaveAttribute('stroke', 'black');
+		expect(southWall).toHaveAttribute('stroke-width', '3');
+		expect(southWall).toHaveAttribute('stroke-linecap', 'square');
+		expect(southWall).toHaveAttribute('x1', x1);
+		expect(southWall).toHaveAttribute('y1', y1);
+		expect(southWall).toHaveAttribute('x2', x2);
+		expect(southWall).toHaveAttribute('y2', y2);
+		expect(southWall.tagName).toBe('line');
+	});
 });

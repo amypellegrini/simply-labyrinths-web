@@ -27,5 +27,14 @@
 {/if}
 
 {#if !cell.south || (cell.south && !cell.linked(cell.south))}
-	<line data-testid="cell-wall" stroke="black" stroke-width="3" stroke-linecap="square" />
+	<line
+		data-testid="cell-wall-south"
+		stroke="black"
+		stroke-width="3"
+		x1={cell.column * cellSize}
+		y1={cell.row * cellSize + cellSize}
+		y2={cell.row * cellSize + cellSize}
+		x2={cell.column * cellSize + cellSize}
+		stroke-linecap="square"
+	/>
 {/if}

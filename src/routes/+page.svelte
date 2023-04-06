@@ -228,20 +228,19 @@
 		<svg
 			viewBox="-5 -5 {cellSize * columns + 10} {cellSize * rows + 10}"
 			class="maze"
-			style="margin: 0 auto; display: block"
 			on:touchstart={onTouch}
 			on:touchend={onTouch}
 		>
+			<circle
+				cx={(startAndEnd[1].column + 1) * cellSize - cellSize / 2}
+				cy={(startAndEnd[1].row + 1) * cellSize - cellSize / 2}
+				r="7"
+				fill="#009900"
+			/>
+
 			{#each maze.cells as cell}
 				<Cell {cell} {cellSize} />
-				{#if cell.id === startAndEnd[1].id}
-					<circle
-						cx={(cell.column + 1) * cellSize - cellSize / 2}
-						cy={(cell.row + 1) * cellSize - cellSize / 2}
-						r="7"
-						fill="#009900"
-					/>
-				{/if}
+
 				{#if debug}
 					<text
 						x={cell.column * cellSize + cellSize / 2 - 5}
@@ -251,6 +250,7 @@
 					</text>
 				{/if}
 			{/each}
+
 			<circle
 				class="cursor"
 				cx={(cursor.x + 1) * cellSize - cellSize / 2}
@@ -368,6 +368,8 @@
 	.maze {
 		width: 100%;
 		max-height: 80vh;
+		margin: 0 auto;
+		display: block;
 	}
 
 	@media (min-width: 640px) {

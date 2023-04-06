@@ -81,4 +81,48 @@ describe('Cell', () => {
 		expect(southWall).toHaveAttribute('y2', y2);
 		expect(southWall.tagName).toBe('line');
 	});
+
+	test.each([
+		[0, 0, '10', '0', '10', '10'],
+		[1, 0, '10', '10', '10', '20'],
+		[0, 1, '20', '0', '20', '10'],
+		[1, 1, '20', '10', '20', '20']
+	])(`east wall properties`, (rows, columns, x1, y1, x2, y2) => {
+		const cell = new CellModel(rows, columns);
+
+		render(Cell, { cell, cellSize: 10 });
+
+		const eastWall = screen.getByTestId('cell-wall-east');
+
+		expect(eastWall).toHaveAttribute('stroke', 'black');
+		expect(eastWall).toHaveAttribute('stroke-width', '3');
+		expect(eastWall).toHaveAttribute('stroke-linecap', 'square');
+		expect(eastWall).toHaveAttribute('x1', x1);
+		expect(eastWall).toHaveAttribute('y1', y1);
+		expect(eastWall).toHaveAttribute('x2', x2);
+		expect(eastWall).toHaveAttribute('y2', y2);
+		expect(eastWall.tagName).toBe('line');
+	});
+
+	test.each([
+		[0, 0, '0', '0', '0', '10'],
+		[1, 0, '0', '10', '0', '20'],
+		[0, 1, '10', '0', '10', '10'],
+		[1, 1, '10', '10', '10', '20']
+	])(`west wall properties`, (rows, columns, x1, y1, x2, y2) => {
+		const cell = new CellModel(rows, columns);
+
+		render(Cell, { cell, cellSize: 10 });
+
+		const westWall = screen.getByTestId('cell-wall-west');
+
+		expect(westWall).toHaveAttribute('stroke', 'black');
+		expect(westWall).toHaveAttribute('stroke-width', '3');
+		expect(westWall).toHaveAttribute('stroke-linecap', 'square');
+		expect(westWall).toHaveAttribute('x1', x1);
+		expect(westWall).toHaveAttribute('y1', y1);
+		expect(westWall).toHaveAttribute('x2', x2);
+		expect(westWall).toHaveAttribute('y2', y2);
+		expect(westWall.tagName).toBe('line');
+	});
 });

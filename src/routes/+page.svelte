@@ -2,6 +2,7 @@
 	import Grid from '../model/grid';
 	import wilson from '../model/wilson';
 	import longestPath from '../model/longestPath';
+	import Cell from '../components/Cell.svelte';
 
 	const debug = false;
 	const cellSize = 30;
@@ -232,50 +233,7 @@
 			on:touchend={onTouch}
 		>
 			{#each maze.cells as cell}
-				{#if !cell.north || (cell.north && !cell.linked(cell.north))}
-					<line
-						x1={cell.column * cellSize}
-						y1={cell.row * cellSize}
-						x2={cell.column * cellSize + cellSize}
-						y2={cell.row * cellSize}
-						stroke="black"
-						stroke-width="3"
-						stroke-linecap="square"
-					/>
-				{/if}
-				{#if !cell.east || (cell.east && !cell.linked(cell.east))}
-					<line
-						stroke-width="3"
-						x1={cell.column * cellSize + cellSize}
-						y1={cell.row * cellSize}
-						x2={cell.column * cellSize + cellSize}
-						y2={cell.row * cellSize + cellSize}
-						stroke="black"
-						stroke-linecap="square"
-					/>
-				{/if}
-				{#if !cell.west || (cell.west && !cell.linked(cell.west))}
-					<line
-						stroke-width="3"
-						x1={cell.column * cellSize}
-						y1={cell.row * cellSize}
-						x2={cell.column * cellSize}
-						y2={cell.row * cellSize + cellSize}
-						stroke="black"
-						stroke-linecap="square"
-					/>
-				{/if}
-				{#if !cell.south || (cell.south && !cell.linked(cell.south))}
-					<line
-						stroke-width="3"
-						x1={cell.column * cellSize}
-						y1={cell.row * cellSize + cellSize}
-						x2={cell.column * cellSize + cellSize}
-						y2={cell.row * cellSize + cellSize}
-						stroke="black"
-						stroke-linecap="square"
-					/>
-				{/if}
+				<Cell {cell} {cellSize} />
 				{#if cell.id === startAndEnd[1].id}
 					<circle
 						cx={(cell.column + 1) * cellSize - cellSize / 2}

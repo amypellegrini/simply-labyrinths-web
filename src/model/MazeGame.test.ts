@@ -1,7 +1,15 @@
-import { describe } from 'vitest';
+import { vi, describe } from 'vitest';
 import MazeGame from './MazeGame';
 import Grid from './grid';
 import longestPath from './longestPath';
+import wilson from './wilson';
+
+vi.mock('./wilson', () => {
+	return {
+		__esModule: true,
+		default: vi.fn(() => new Grid(5, 5))
+	};
+});
 
 describe('MazeGame', () => {
 	it('initializes properties correctly', () => {
@@ -16,6 +24,8 @@ describe('MazeGame', () => {
 		expect(mazeGame.score).toBe(0);
 		expect(mazeGame.scoreDelta).toBe(0);
 		expect(mazeGame.level).toBe(1);
+
+		expect(wilson).toHaveBeenCalled();
 	});
 
 	it('has a start and end cells', () => {

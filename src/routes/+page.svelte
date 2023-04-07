@@ -3,47 +3,39 @@
 	import wilson from '../model/wilson';
 	import longestPath from '../model/longestPath';
 	import Cell from '../components/Cell.svelte';
+	import MazeGame from '../model/MazeGame';
 
-	const debug = false;
-	const cellSize = 30;
 	const rowsAndColumnsDelta = 3;
 
-	let rows = 5;
-	let columns = 5;
-	let maze = wilson(new Grid(rows, columns));
-	let startAndEnd = longestPath(maze);
-	let visitedCells = new Map();
-	let level = 1;
-	let score = 0;
-	let scoreDelta = 0;
+	const mazeGame = new MazeGame();
 
-	visitedCells.set(startAndEnd[0].id, 1);
+	const cellSize = mazeGame.cellSize;
 
 	const cursor = {
-		x: startAndEnd[0].column,
-		y: startAndEnd[0].row
+		x: mazeGame.startAndEndCells[0].column,
+		y: mazeGame.startAndEndCells[0].row
 	};
 
-	let distances = maze.cells[0].distances();
+	let distances = mazeGame.maze.cells[0].distances();
 
 	const reset = () => {
-		rows += rowsAndColumnsDelta;
-		columns += rowsAndColumnsDelta;
-		maze = wilson(new Grid(rows, columns));
-		startAndEnd = longestPath(maze);
-		visitedCells = new Map();
-		level += 1;
+		mazeGame.rows += rowsAndColumnsDelta;
+		mazeGame.columns += rowsAndColumnsDelta;
+		mazeGame.maze = wilson(new Grid(mazeGame.rows, mazeGame.columns));
+		mazeGame.startAndEndCells = longestPath(mazeGame.maze);
+		mazeGame.visitedCells = new Map();
+		mazeGame.level += 1;
 
-		visitedCells.set(startAndEnd[0].id, 1);
+		mazeGame.visitedCells.set(mazeGame.startAndEndCells[0].id, 1);
 
-		cursor.x = startAndEnd[0].column;
-		cursor.y = startAndEnd[0].row;
+		cursor.x = mazeGame.startAndEndCells[0].column;
+		cursor.y = mazeGame.startAndEndCells[0].row;
 
-		distances = maze.cells[0].distances();
+		distances = mazeGame.maze.cells[0].distances();
 	};
 
 	const moveCursor = (/** @type {string} */ direction) => {
-		const cell = maze.grid[cursor.y][cursor.x];
+		const cell = mazeGame.maze.grid[cursor.y][cursor.x];
 
 		if (direction === 'right' && cell.east && cell.linked(cell.east)) {
 			cursor.x += 1;
@@ -61,17 +53,17 @@
 			cursor.y -= 1;
 		}
 
-		const newCell = maze.grid[cursor.y][cursor.x];
+		const newCell = mazeGame.maze.grid[cursor.y][cursor.x];
 
 		if (cell !== newCell) {
-			if (visitedCells.has(newCell.id)) {
-				scoreDelta = -5;
+			if (mazeGame.visitedCells.has(newCell.id)) {
+				mazeGame.scoreDelta = -5;
 			} else {
-				visitedCells.set(newCell.id, 1);
-				scoreDelta = 3;
+				mazeGame.visitedCells.set(newCell.id, 1);
+				mazeGame.scoreDelta = 3;
 			}
 
-			score += scoreDelta;
+			mazeGame.score += mazeGame.scoreDelta;
 
 			if (newCell.links.size === 2) {
 				const oppositeDirection = {
@@ -107,7 +99,10 @@
 			}
 		}
 
-		if (cursor.x === startAndEnd[1].column && cursor.y === startAndEnd[1].row) {
+		if (
+			cursor.x === mazeGame.startAndEndCells[1].column &&
+			cursor.y === mazeGame.startAndEndCells[1].row
+		) {
 			setTimeout(() => {
 				reset();
 			}, 500);
@@ -197,7 +192,7 @@
 <header class="header">
 	<div />
 	<h1>Simply Labyrinths</h1>
-	<p>Level {level}</p>
+	<p>Level {mazeGame.level}</p>
 </header>
 
 <svelte:window on:keydown={onKeyDown} />
@@ -208,40 +203,42 @@
 	<div class="main-body">
 		<div class="score-info">
 			<div class="aside" />
-			<p class="score">{score}</p>
+			<p class="score">{mazeGame.score}</p>
 
-			{#if scoreDelta > 0}
+			{#if mazeGame.scoreDelta > 0}
 				<p class="score-delta positive">
-					+{scoreDelta}
+					+{mazeGame.scoreDelta}
 				</p>
 			{/if}
-			{#if scoreDelta < 0}
+			{#if mazeGame.scoreDelta < 0}
 				<p class="score-delta negative">
-					{scoreDelta}
+					{mazeGame.scoreDelta}
 				</p>
 			{/if}
-			{#if scoreDelta === 0}
+			{#if mazeGame.scoreDelta === 0}
 				<div />
 			{/if}
 		</div>
 
 		<svg
-			viewBox="-5 -5 {cellSize * columns + 10} {cellSize * rows + 10}"
+			viewBox="-5 -5 {mazeGame.cellSize * mazeGame.columns + 10} {mazeGame.cellSize *
+				mazeGame.rows +
+				10}"
 			class="maze"
 			on:touchstart={onTouch}
 			on:touchend={onTouch}
 		>
 			<circle
-				cx={(startAndEnd[1].column + 1) * cellSize - cellSize / 2}
-				cy={(startAndEnd[1].row + 1) * cellSize - cellSize / 2}
+				cx={(mazeGame.startAndEndCells[1].column + 1) * mazeGame.cellSize - mazeGame.cellSize / 2}
+				cy={(mazeGame.startAndEndCells[1].row + 1) * mazeGame.cellSize - mazeGame.cellSize / 2}
 				r="7"
 				fill="#009900"
 			/>
 
-			{#each maze.cells as cell}
+			{#each mazeGame.maze.cells as cell}
 				<Cell {cell} {cellSize} />
 
-				{#if debug}
+				{#if mazeGame.debug}
 					<text
 						x={cell.column * cellSize + cellSize / 2 - 5}
 						y={cell.row * cellSize + cellSize / 2 + 5}
@@ -261,7 +258,7 @@
 		</svg>
 	</div>
 	<div class="aside xs-mt-1">
-		{#if level === 1}
+		{#if mazeGame.level === 1}
 			<p>
 				Master the art of maze navigation with Simply Labyrinths, the captivating online maze game!
 			</p>

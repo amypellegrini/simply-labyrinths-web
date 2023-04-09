@@ -71,25 +71,41 @@
 					up: 'down'
 				}[direction];
 
-				if (oppositeDirection !== 'up' && newCell.north && newCell.linked(newCell.north)) {
+				if (
+					oppositeDirection !== 'up' &&
+					newCell.north &&
+					newCell.linked(newCell.north)
+				) {
 					setTimeout(() => {
 						moveCursor('up');
 					}, 100);
 				}
 
-				if (oppositeDirection !== 'down' && newCell.south && newCell.linked(newCell.south)) {
+				if (
+					oppositeDirection !== 'down' &&
+					newCell.south &&
+					newCell.linked(newCell.south)
+				) {
 					setTimeout(() => {
 						moveCursor('down');
 					}, 100);
 				}
 
-				if (oppositeDirection !== 'left' && newCell.west && newCell.linked(newCell.west)) {
+				if (
+					oppositeDirection !== 'left' &&
+					newCell.west &&
+					newCell.linked(newCell.west)
+				) {
 					setTimeout(() => {
 						moveCursor('left');
 					}, 100);
 				}
 
-				if (oppositeDirection !== 'right' && newCell.east && newCell.linked(newCell.east)) {
+				if (
+					oppositeDirection !== 'right' &&
+					newCell.east &&
+					newCell.linked(newCell.east)
+				) {
 					setTimeout(() => {
 						moveCursor('right');
 					}, 100);
@@ -151,7 +167,10 @@
 		const deltaX = touchEndX - touchStartX;
 		const deltaY = touchEndY - touchStartY;
 
-		if (Math.abs(deltaX) > minSwipeDistance || Math.abs(deltaY) > minSwipeDistance) {
+		if (
+			Math.abs(deltaX) > minSwipeDistance ||
+			Math.abs(deltaY) > minSwipeDistance
+		) {
 			if (Math.abs(deltaX) > Math.abs(deltaY)) {
 				if (deltaX > 0) {
 					moveCursor('right');
@@ -219,16 +238,17 @@
 		</div>
 
 		<svg
-			viewBox="-5 -5 {mazeGame.cellSize * mazeGame.columns + 10} {mazeGame.cellSize *
-				mazeGame.rows +
-				10}"
+			viewBox="-5 -5 {mazeGame.cellSize * mazeGame.columns +
+				10} {mazeGame.cellSize * mazeGame.rows + 10}"
 			class="maze"
 			on:touchstart={onTouch}
 			on:touchend={onTouch}
 		>
 			<circle
-				cx={(mazeGame.startAndEndCells[1].column + 1) * mazeGame.cellSize - mazeGame.cellSize / 2}
-				cy={(mazeGame.startAndEndCells[1].row + 1) * mazeGame.cellSize - mazeGame.cellSize / 2}
+				cx={(mazeGame.startAndEndCells[1].column + 1) * mazeGame.cellSize -
+					mazeGame.cellSize / 2}
+				cy={(mazeGame.startAndEndCells[1].row + 1) * mazeGame.cellSize -
+					mazeGame.cellSize / 2}
 				r="7"
 				fill="#009900"
 			/>
@@ -248,34 +268,40 @@
 
 			<circle
 				class="cursor"
-				cx={(cursor.x + 1) * cellSize - cellSize / 2}
-				cy={(cursor.y + 1) * cellSize - cellSize / 2}
+				cx={mazeGame.cursorToScreenCoordinates(cursor.x)}
+				cy={mazeGame.cursorToScreenCoordinates(cursor.y)}
 				r="7"
 				fill="#990000"
 			/>
 		</svg>
 	</div>
+
 	<div class="aside xs-mt-1">
 		{#if mazeGame.level === 1}
 			<p>
-				Master the art of maze navigation with Simply Labyrinths, the captivating online maze game!
+				Master the art of maze navigation with Simply Labyrinths, the
+				captivating online maze game!
 			</p>
 			<p>Follow these simple steps to succeed:</p>
 
 			<ul>
 				<li>
-					Move the red circle towards the green circle using your keyboard's arrow keys (or swipe
-					over the maze if using a mobile device).
+					Move the red circle towards the green circle using your keyboard's
+					arrow keys (or swipe over the maze if using a mobile device).
 				</li>
-				<li>Progress through the labyrinth while collecting points for a higher score.</li>
 				<li>
-					Be strategic and avoid revisiting the same spot, as this will result in point deductions.
+					Progress through the labyrinth while collecting points for a higher
+					score.
+				</li>
+				<li>
+					Be strategic and avoid revisiting the same spot, as this will result
+					in point deductions.
 				</li>
 			</ul>
 
 			<p>
-				Stay focused and skillfully guide your way through the labyrinths for an unparalleled gaming
-				experience!
+				Stay focused and skillfully guide your way through the labyrinths for an
+				unparalleled gaming experience!
 			</p>
 		{/if}
 	</div>

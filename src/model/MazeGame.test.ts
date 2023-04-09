@@ -51,6 +51,8 @@ describe('MazeGame', () => {
 		const mazeGame = new MazeGame();
 
 		expect(mazeGame.visitedCells).toBeInstanceOf(Map);
-		expect(mazeGame.visitedCells.has(mazeGame.startAndEndCells[0].id)).toBe(true);
+		expect(mazeGame.visitedCells.has(mazeGame.startAndEndCells[0].id)).toBe(
+			true
+		);
 	});
 });

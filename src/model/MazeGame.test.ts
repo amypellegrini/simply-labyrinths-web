@@ -24,6 +24,18 @@ describe('MazeGame', () => {
 		expect(mazeGame.score).toBe(0);
 		expect(mazeGame.scoreDelta).toBe(0);
 		expect(mazeGame.level).toBe(1);
+		expect(mazeGame.rowsAndColumnsDelta).toBe(3);
+		expect(mazeGame.cursorRow).toBe(mazeGame.startAndEndCells[0].row);
+		expect(mazeGame.cursorColumn).toBe(mazeGame.startAndEndCells[0].column);
+
+		const expectedCursorX =
+			(mazeGame.cursorColumn + 1) * mazeGame.cellSize - mazeGame.cellSize / 2;
+
+		const expectedCursorY =
+			(mazeGame.cursorRow + 1) * mazeGame.cellSize - mazeGame.cellSize / 2;
+
+		expect(mazeGame.cursorX).toBe(expectedCursorX);
+		expect(mazeGame.cursorY).toBe(expectedCursorY);
 
 		expect(wilson).toHaveBeenCalled();
 	});

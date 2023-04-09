@@ -5,8 +5,6 @@
 	import Cell from '../components/Cell.svelte';
 	import MazeGame from '../model/MazeGame';
 
-	const rowsAndColumnsDelta = 3;
-
 	const mazeGame = new MazeGame();
 
 	const cellSize = mazeGame.cellSize;
@@ -18,9 +16,9 @@
 
 	let distances = mazeGame.maze.cells[0].distances();
 
-	const reset = () => {
-		mazeGame.rows += rowsAndColumnsDelta;
-		mazeGame.columns += rowsAndColumnsDelta;
+	const levelUp = () => {
+		mazeGame.rows += mazeGame.rowsAndColumnsDelta;
+		mazeGame.columns += mazeGame.rowsAndColumnsDelta;
 		mazeGame.maze = wilson(new Grid(mazeGame.rows, mazeGame.columns));
 		mazeGame.startAndEndCells = longestPath(mazeGame.maze);
 		mazeGame.visitedCells = new Map();
@@ -104,7 +102,7 @@
 			cursor.y === mazeGame.startAndEndCells[1].row
 		) {
 			setTimeout(() => {
-				reset();
+				levelUp();
 			}, 500);
 		}
 	};

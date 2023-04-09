@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import Grid from '../model/grid';
 	import wilson from '../model/wilson';
 	import longestPath from '../model/longestPath';
@@ -34,7 +34,7 @@
 		distances = mazeGame.maze.cells[0].distances();
 	};
 
-	const moveCursor = (/** @type {string} */ direction) => {
+	const moveCursor = (direction: string) => {
 		const cell = mazeGame.maze.grid[cursor.y][cursor.x];
 
 		if (direction === 'right' && cell.east && cell.linked(cell.east)) {
@@ -109,7 +109,7 @@
 		}
 	};
 
-	const onKeyDown = (/** @type {KeyboardEvent} */ event) => {
+	const onKeyDown = (event: KeyboardEvent) => {
 		if (event.key === 'ArrowRight') {
 			moveCursor('right');
 		}
@@ -130,22 +130,22 @@
 	/**
 	 * @type {number}
 	 */
-	let touchStartX;
+	let touchStartX: number;
 
 	/**
 	 * @type {number}
 	 */
-	let touchStartY;
+	let touchStartY: number;
 
 	/**
 	 * @type {number}
 	 */
-	let touchEndX;
+	let touchEndX: number;
 
 	/**
 	 * @type {number}
 	 */
-	let touchEndY;
+	let touchEndY: number;
 
 	const minSwipeDistance = 25;
 
@@ -170,7 +170,7 @@
 		}
 	};
 
-	const onTouch = (/** @type {TouchEvent} */ event) => {
+	const onTouch = (event: TouchEvent) => {
 		event.preventDefault();
 
 		switch (event.type) {

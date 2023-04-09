@@ -37,4 +37,26 @@ export default class MazeGame {
 	cursorToScreenCoordinates(rowOrColumn: number) {
 		return (rowOrColumn + 1) * this.cellSize - this.cellSize / 2;
 	}
+
+	moveCursor(direction: 'right' | 'left' | 'up' | 'down') {
+		const currentCell = this.maze.grid[this.cursorRow][this.cursorColumn];
+
+		if (direction === 'right' && currentCell.east) {
+			this.cursorColumn += 1;
+			this.cursorX = this.cursorToScreenCoordinates(this.cursorColumn);
+		}
+
+		if (direction === 'down' && currentCell.south) {
+			this.cursorRow += 1;
+			this.cursorY = this.cursorToScreenCoordinates(this.cursorRow);
+		}
+
+		const nextCell = this.maze.grid[this.cursorRow][this.cursorColumn];
+
+		if (nextCell !== currentCell && nextCell.links.size === 2) {
+			setTimeout(() => {
+				this.moveCursor(direction);
+			}, 100);
+		}
+	}
 }

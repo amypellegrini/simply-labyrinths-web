@@ -6,8 +6,8 @@ import wilson from './wilson';
 
 vi.useFakeTimers();
 
-function leftJunctionGrid() {
-	const grid = new Grid(5, 5);
+function leftJunctionGrid(optionalGrid?: Grid) {
+	const grid = optionalGrid || new Grid(5, 5);
 
 	let currentCell = grid.cells[0];
 	let nextCell = currentCell.east;
@@ -25,8 +25,8 @@ function leftJunctionGrid() {
 	return grid;
 }
 
-function southJunctionGrid() {
-	const grid = new Grid(5, 5);
+function southJunctionGrid(optionalGrid?: Grid) {
+	const grid = optionalGrid || new Grid(5, 5);
 
 	let currentCell = grid.cells[0];
 	let nextCell = currentCell.south;
@@ -40,6 +40,14 @@ function southJunctionGrid() {
 			currentCell.link(currentCell.east, true);
 		}
 	}
+
+	return grid;
+}
+
+function northJunctionGrid(optionalGrid?: Grid) {
+	const grid = southJunctionGrid(optionalGrid);
+
+	grid.grid[1][1].link(grid.grid[1][0], true);
 
 	return grid;
 }
@@ -113,7 +121,7 @@ describe('MazeGame', () => {
 		expect(mazeGame.cursorToScreenCoordinates(4)).toBe(135);
 	});
 
-	it('moves cursor to the east until the next junction', async () => {
+	it('moves cursor to the east until the next junction', () => {
 		const timeoutSpy = vi.spyOn(global, 'setTimeout');
 
 		mockWilson.mockImplementation(() => leftJunctionGrid());
@@ -131,7 +139,30 @@ describe('MazeGame', () => {
 		expect(timeoutSpy).toHaveBeenCalledTimes(2);
 	});
 
+	it('moves cursor to the east until the next wall', async () => {
+		const timeoutSpy = vi.spyOn(global, 'setTimeout');
+
+		mockWilson.mockImplementation(() => leftJunctionGrid());
+
+		const mazeGame = new MazeGame();
+
+		mazeGame.moveCursor('right');
+
+		vi.advanceTimersByTime(10000);
+
+		mazeGame.moveCursor('right');
+
+		vi.advanceTimersByTime(10000);
+
+		expect(mazeGame.cursorColumn).toBe(4);
+		expect(mazeGame.cursorX).toBe(135);
+		expect(timeoutSpy).toHaveBeenCalledTimes(2);
+	});
+
+	// it('moves cursor to the west until the next junction', async () => {});
+
 	it('moves cursor to the south until the next junction', async () => {
+		const timeoutSpy = vi.spyOn(global, 'setTimeout');
 		mockWilson.mockImplementation(() => southJunctionGrid());
 
 		const mazeGame = new MazeGame();
@@ -144,7 +175,82 @@ describe('MazeGame', () => {
 		expect(mazeGame.cursorRow).toBe(3);
 		expect(mazeGame.cursorX).toBe(15);
 		expect(mazeGame.cursorY).toBe(105);
+		expect(timeoutSpy).toHaveBeenCalledTimes(2);
 	});
+
+	it('moves cursor to the south until the next wall', async () => {
+		const timeoutSpy = vi.spyOn(global, 'setTimeout');
+
+		mockWilson.mockImplementation(() => southJunctionGrid());
+
+		const mazeGame = new MazeGame();
+
+		mazeGame.moveCursor('down');
+
+		vi.advanceTimersByTime(10000);
+
+		mazeGame.moveCursor('down');
+
+		vi.advanceTimersByTime(10000);
+
+		expect(mazeGame.cursorRow).toBe(4);
+		expect(mazeGame.cursorY).toBe(135);
+		expect(timeoutSpy).toHaveBeenCalledTimes(2);
+	});
+
+	it('moves cursor to the north until the next junction', async () => {
+		const timeoutSpy = vi.spyOn(global, 'setTimeout');
+
+		mockWilson.mockImplementation(() => northJunctionGrid());
+
+		const mazeGame = new MazeGame();
+
+		mazeGame.moveCursor('down');
+		vi.advanceTimersByTime(10000);
+
+		mazeGame.moveCursor('down');
+		vi.advanceTimersByTime(10000);
+
+		mazeGame.moveCursor('up');
+		vi.advanceTimersByTime(10000);
+
+		expect(mazeGame.cursorColumn).toBe(0);
+		expect(mazeGame.cursorRow).toBe(1);
+		expect(mazeGame.cursorX).toBe(15);
+		expect(mazeGame.cursorY).toBe(45);
+		expect(timeoutSpy).toHaveBeenCalledTimes(2);
+	});
+
+	it('moves cursor north then east until the next junction', async () => {
+		const timeoutSpy = vi.spyOn(global, 'setTimeout');
+
+		mockWilson.mockImplementation(() => {
+			return southJunctionGrid(leftJunctionGrid());
+		});
+
+		const mazeGame = new MazeGame();
+
+		mazeGame.moveCursor('left');
+		vi.advanceTimersByTime(10000);
+
+		mazeGame.moveCursor('up');
+		vi.advanceTimersByTime(10000);
+
+		expect(mazeGame.cursorColumn).toBe(3);
+		expect(mazeGame.cursorRow).toBe(0);
+		expect(mazeGame.cursorX).toBe(105);
+		expect(mazeGame.cursorY).toBe(15);
+		expect(timeoutSpy).toHaveBeenCalledTimes(5);
+	});
+
+	// it('cannot accept cursor movements while it is moving', () => {
+	// 	mockWilson.mockImplementation(() => southJunctionGrid());
+
+	// 	const mazeGame = new MazeGame();
+
+	// 	mazeGame.moveCursor('down');
+	// 	mazeGame.moveCursor('down');
+	// });
 
 	// it('levels up when cursor reaches the end cell', () => {});
 });

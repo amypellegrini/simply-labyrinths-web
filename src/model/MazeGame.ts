@@ -51,12 +51,65 @@ export default class MazeGame {
 			this.cursorY = this.cursorToScreenCoordinates(this.cursorRow);
 		}
 
+		if (direction === 'left' && currentCell.west) {
+			this.cursorColumn -= 1;
+			this.cursorX = this.cursorToScreenCoordinates(this.cursorColumn);
+		}
+
+		if (direction === 'up' && currentCell.north) {
+			this.cursorRow -= 1;
+			this.cursorY = this.cursorToScreenCoordinates(this.cursorRow);
+		}
+
 		const nextCell = this.maze.grid[this.cursorRow][this.cursorColumn];
 
 		if (nextCell !== currentCell && nextCell.links.size === 2) {
-			setTimeout(() => {
-				this.moveCursor(direction);
-			}, 100);
+			const oppositeDirection = {
+				right: 'left',
+				left: 'right',
+				down: 'up',
+				up: 'down'
+			}[direction];
+
+			if (
+				oppositeDirection !== 'up' &&
+				nextCell.north &&
+				nextCell.linked(nextCell.north)
+			) {
+				setTimeout(() => {
+					this.moveCursor('up');
+				}, 100);
+			}
+
+			if (
+				oppositeDirection !== 'down' &&
+				nextCell.south &&
+				nextCell.linked(nextCell.south)
+			) {
+				setTimeout(() => {
+					this.moveCursor('down');
+				}, 100);
+			}
+
+			if (
+				oppositeDirection !== 'left' &&
+				nextCell.west &&
+				nextCell.linked(nextCell.west)
+			) {
+				setTimeout(() => {
+					this.moveCursor('left');
+				}, 100);
+			}
+
+			if (
+				oppositeDirection !== 'right' &&
+				nextCell.east &&
+				nextCell.linked(nextCell.east)
+			) {
+				setTimeout(() => {
+					this.moveCursor('right');
+				}, 100);
+			}
 		}
 	}
 }

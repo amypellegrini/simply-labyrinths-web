@@ -103,12 +103,22 @@ describe('MazeGame', () => {
 	});
 
 	it('keeps track of visited cells', () => {
+		mockWilson.mockImplementation(() => southJunctionGrid());
+
 		const mazeGame = new MazeGame();
 
 		expect(mazeGame.visitedCells).toBeInstanceOf(Map);
 		expect(mazeGame.visitedCells.has(mazeGame.startAndEndCells[0].id)).toBe(
 			true
 		);
+
+		mazeGame.moveCursor('down');
+		vi.advanceTimersByTime(10000);
+
+		expect(mazeGame.visitedCells.has('1-0')).toBe(true);
+		expect(mazeGame.visitedCells.has('2-0')).toBe(true);
+		expect(mazeGame.visitedCells.has('3-0')).toBe(true);
+		expect(mazeGame.visitedCells.size).toBe(4);
 	});
 
 	it('converts cursor coordinates to screen coordinates', () => {
@@ -357,5 +367,44 @@ describe('MazeGame', () => {
 		expect(timeoutSpy).toHaveBeenCalledTimes(2);
 	});
 
-	// it('levels up when cursor reaches the end cell', () => {});
+	it('levels up when cursor reaches the end cell', () => {
+		mockWilson.mockImplementation(() => southJunctionGrid());
+
+		const mazeGame = new MazeGame();
+
+		mockWilson.mockImplementation(() => southJunctionGrid(new Grid(8, 8)));
+
+		mazeGame.moveCursor('down');
+		vi.advanceTimersByTime(10000);
+
+		mazeGame.moveCursor('right');
+		vi.advanceTimersByTime(10000);
+
+		expect(mazeGame.level).toBe(2);
+		expect(mazeGame.rows).toBe(8);
+		expect(mazeGame.columns).toBe(8);
+		expect(mockWilson).toHaveBeenCalledTimes(2);
+	});
+
+	it('keeps increasing level and grid size when levelling up', () => {
+		const mazeGame = new MazeGame();
+
+		mazeGame.levelUp();
+
+		expect(mazeGame.level).toBe(2);
+		expect(mazeGame.rows).toBe(8);
+		expect(mazeGame.columns).toBe(8);
+
+		mazeGame.levelUp();
+
+		expect(mazeGame.level).toBe(3);
+		expect(mazeGame.rows).toBe(11);
+		expect(mazeGame.columns).toBe(11);
+
+		mazeGame.levelUp();
+
+		expect(mazeGame.level).toBe(4);
+		expect(mazeGame.rows).toBe(14);
+		expect(mazeGame.columns).toBe(14);
+	});
 });

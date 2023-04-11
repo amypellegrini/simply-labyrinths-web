@@ -52,6 +52,14 @@ export default class MazeGame {
 		return (rowOrColumn + 1) * this.cellSize - this.cellSize / 2;
 	}
 
+	levelUp() {
+		this.rows += this.rowsAndColumnsDelta;
+		this.columns += this.rowsAndColumnsDelta;
+		this.level += 1;
+
+		this.maze = wilson(new Grid(this.rows, this.columns));
+	}
+
 	moveCursor(
 		direction: 'right' | 'left' | 'up' | 'down',
 		bypassStateCheck = false
@@ -103,55 +111,68 @@ export default class MazeGame {
 		const nextCell = this.maze.grid[this.cursor.row][this.cursor.column];
 		this.onCursorUpdate?.(this.cursor);
 
-		if (nextCell !== currentCell && nextCell.links.size === 2) {
-			const oppositeDirection = {
-				right: 'left',
-				left: 'right',
-				down: 'up',
-				up: 'down'
-			}[direction];
+		if (nextCell !== currentCell) {
+			if (nextCell.links.size === 2) {
+				const oppositeDirection = {
+					right: 'left',
+					left: 'right',
+					down: 'up',
+					up: 'down'
+				}[direction];
 
-			if (
-				oppositeDirection !== 'up' &&
-				nextCell.north &&
-				nextCell.linked(nextCell.north)
-			) {
-				setTimeout(() => {
-					this.moveCursor('up', true);
-				}, 100);
+				if (
+					oppositeDirection !== 'up' &&
+					nextCell.north &&
+					nextCell.linked(nextCell.north)
+				) {
+					setTimeout(() => {
+						this.moveCursor('up', true);
+					}, 100);
+				}
+
+				if (
+					oppositeDirection !== 'down' &&
+					nextCell.south &&
+					nextCell.linked(nextCell.south)
+				) {
+					setTimeout(() => {
+						this.moveCursor('down', true);
+					}, 100);
+				}
+
+				if (
+					oppositeDirection !== 'left' &&
+					nextCell.west &&
+					nextCell.linked(nextCell.west)
+				) {
+					setTimeout(() => {
+						this.moveCursor('left', true);
+					}, 100);
+				}
+
+				if (
+					oppositeDirection !== 'right' &&
+					nextCell.east &&
+					nextCell.linked(nextCell.east)
+				) {
+					setTimeout(() => {
+						this.moveCursor('right', true);
+					}, 100);
+				}
+			} else {
+				this.__cursorState = 'idle';
 			}
 
 			if (
-				oppositeDirection !== 'down' &&
-				nextCell.south &&
-				nextCell.linked(nextCell.south)
+				this.cursor.column === this.startAndEndCells[1].column &&
+				this.cursor.row === this.startAndEndCells[1].row
 			) {
-				setTimeout(() => {
-					this.moveCursor('down', true);
-				}, 100);
+				this.levelUp();
+			} else {
+				if (!this.visitedCells.has(nextCell.id)) {
+					this.visitedCells.set(nextCell.id, 1);
+				}
 			}
-
-			if (
-				oppositeDirection !== 'left' &&
-				nextCell.west &&
-				nextCell.linked(nextCell.west)
-			) {
-				setTimeout(() => {
-					this.moveCursor('left', true);
-				}, 100);
-			}
-
-			if (
-				oppositeDirection !== 'right' &&
-				nextCell.east &&
-				nextCell.linked(nextCell.east)
-			) {
-				setTimeout(() => {
-					this.moveCursor('right', true);
-				}, 100);
-			}
-		} else {
-			this.__cursorState = 'idle';
 		}
 	}
 }

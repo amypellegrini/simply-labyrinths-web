@@ -80,17 +80,17 @@ describe('MazeGame', () => {
 		expect(mazeGame.level).toBe(1);
 		expect(mazeGame.rowsAndColumnsDelta).toBe(3);
 
-		expect(mazeGame.cursorRow).toBe(mazeGame.startAndEndCells[0].row);
-		expect(mazeGame.cursorColumn).toBe(mazeGame.startAndEndCells[0].column);
+		expect(mazeGame.cursor.row).toBe(mazeGame.startAndEndCells[0].row);
+		expect(mazeGame.cursor.column).toBe(mazeGame.startAndEndCells[0].column);
 
 		const expectedCursorX =
-			(mazeGame.cursorColumn + 1) * mazeGame.cellSize - mazeGame.cellSize / 2;
+			(mazeGame.cursor.column + 1) * mazeGame.cellSize - mazeGame.cellSize / 2;
 
 		const expectedCursorY =
-			(mazeGame.cursorRow + 1) * mazeGame.cellSize - mazeGame.cellSize / 2;
+			(mazeGame.cursor.row + 1) * mazeGame.cellSize - mazeGame.cellSize / 2;
 
-		expect(mazeGame.cursorX).toBe(expectedCursorX);
-		expect(mazeGame.cursorY).toBe(expectedCursorY);
+		expect(mazeGame.cursor.x).toBe(expectedCursorX);
+		expect(mazeGame.cursor.y).toBe(expectedCursorY);
 
 		expect(wilson).toHaveBeenCalled();
 	});
@@ -132,10 +132,10 @@ describe('MazeGame', () => {
 
 		vi.advanceTimersByTime(10000);
 
-		expect(mazeGame.cursorColumn).toBe(3);
-		expect(mazeGame.cursorRow).toBe(0);
-		expect(mazeGame.cursorX).toBe(105);
-		expect(mazeGame.cursorY).toBe(15);
+		expect(mazeGame.cursor.column).toBe(3);
+		expect(mazeGame.cursor.row).toBe(0);
+		expect(mazeGame.cursor.x).toBe(105);
+		expect(mazeGame.cursor.y).toBe(15);
 		expect(timeoutSpy).toHaveBeenCalledTimes(2);
 	});
 
@@ -147,19 +147,37 @@ describe('MazeGame', () => {
 		const mazeGame = new MazeGame();
 
 		mazeGame.moveCursor('right');
-
 		vi.advanceTimersByTime(10000);
 
 		mazeGame.moveCursor('right');
-
 		vi.advanceTimersByTime(10000);
 
-		expect(mazeGame.cursorColumn).toBe(4);
-		expect(mazeGame.cursorX).toBe(135);
+		expect(mazeGame.cursor.column).toBe(4);
+		expect(mazeGame.cursor.x).toBe(135);
 		expect(timeoutSpy).toHaveBeenCalledTimes(2);
 	});
 
-	// it('moves cursor to the west until the next junction', async () => {});
+	it('moves cursor to the west until the next junction', async () => {
+		mockWilson.mockImplementation(() => southJunctionGrid(leftJunctionGrid()));
+		const timeoutSpy = vi.spyOn(global, 'setTimeout');
+
+		const mazeGame = new MazeGame();
+
+		mazeGame.moveCursor('left');
+		vi.advanceTimersByTime(10000);
+
+		mazeGame.moveCursor('up');
+		vi.advanceTimersByTime(10000);
+
+		mazeGame.moveCursor('left');
+		vi.advanceTimersByTime(10000);
+
+		expect(mazeGame.cursor.column).toBe(0);
+		expect(mazeGame.cursor.row).toBe(3);
+		expect(mazeGame.cursor.x).toBe(15);
+		expect(mazeGame.cursor.y).toBe(105);
+		expect(timeoutSpy).toHaveBeenCalledTimes(10);
+	});
 
 	it('moves cursor to the south until the next junction', async () => {
 		const timeoutSpy = vi.spyOn(global, 'setTimeout');
@@ -168,13 +186,12 @@ describe('MazeGame', () => {
 		const mazeGame = new MazeGame();
 
 		mazeGame.moveCursor('down');
-
 		vi.advanceTimersByTime(10000);
 
-		expect(mazeGame.cursorColumn).toBe(0);
-		expect(mazeGame.cursorRow).toBe(3);
-		expect(mazeGame.cursorX).toBe(15);
-		expect(mazeGame.cursorY).toBe(105);
+		expect(mazeGame.cursor.column).toBe(0);
+		expect(mazeGame.cursor.row).toBe(3);
+		expect(mazeGame.cursor.x).toBe(15);
+		expect(mazeGame.cursor.y).toBe(105);
 		expect(timeoutSpy).toHaveBeenCalledTimes(2);
 	});
 
@@ -186,15 +203,13 @@ describe('MazeGame', () => {
 		const mazeGame = new MazeGame();
 
 		mazeGame.moveCursor('down');
-
 		vi.advanceTimersByTime(10000);
 
 		mazeGame.moveCursor('down');
-
 		vi.advanceTimersByTime(10000);
 
-		expect(mazeGame.cursorRow).toBe(4);
-		expect(mazeGame.cursorY).toBe(135);
+		expect(mazeGame.cursor.row).toBe(4);
+		expect(mazeGame.cursor.y).toBe(135);
 		expect(timeoutSpy).toHaveBeenCalledTimes(2);
 	});
 
@@ -214,10 +229,10 @@ describe('MazeGame', () => {
 		mazeGame.moveCursor('up');
 		vi.advanceTimersByTime(10000);
 
-		expect(mazeGame.cursorColumn).toBe(0);
-		expect(mazeGame.cursorRow).toBe(1);
-		expect(mazeGame.cursorX).toBe(15);
-		expect(mazeGame.cursorY).toBe(45);
+		expect(mazeGame.cursor.column).toBe(0);
+		expect(mazeGame.cursor.row).toBe(1);
+		expect(mazeGame.cursor.x).toBe(15);
+		expect(mazeGame.cursor.y).toBe(45);
 		expect(timeoutSpy).toHaveBeenCalledTimes(2);
 	});
 
@@ -236,21 +251,111 @@ describe('MazeGame', () => {
 		mazeGame.moveCursor('up');
 		vi.advanceTimersByTime(10000);
 
-		expect(mazeGame.cursorColumn).toBe(3);
-		expect(mazeGame.cursorRow).toBe(0);
-		expect(mazeGame.cursorX).toBe(105);
-		expect(mazeGame.cursorY).toBe(15);
+		expect(mazeGame.cursor.column).toBe(3);
+		expect(mazeGame.cursor.row).toBe(0);
+		expect(mazeGame.cursor.x).toBe(105);
+		expect(mazeGame.cursor.y).toBe(15);
 		expect(timeoutSpy).toHaveBeenCalledTimes(5);
 	});
 
-	// it('cannot accept cursor movements while it is moving', () => {
-	// 	mockWilson.mockImplementation(() => southJunctionGrid());
+	it('cannot move cursor right if cell to the right is a wall', () => {
+		mockWilson.mockImplementation(() => {
+			return southJunctionGrid();
+		});
 
-	// 	const mazeGame = new MazeGame();
+		const mazeGame = new MazeGame();
 
-	// 	mazeGame.moveCursor('down');
-	// 	mazeGame.moveCursor('down');
-	// });
+		mazeGame.moveCursor('right');
+		vi.advanceTimersByTime(10000);
+
+		expect(mazeGame.cursor.column).toBe(0);
+		expect(mazeGame.cursor.row).toBe(0);
+		expect(mazeGame.cursor.x).toBe(15);
+		expect(mazeGame.cursor.y).toBe(15);
+	});
+
+	it('cannot move cursor up if cell up is a wall', () => {
+		mockWilson.mockImplementation(() => {
+			return northJunctionGrid();
+		});
+
+		const mazeGame = new MazeGame();
+
+		mazeGame.moveCursor('down');
+		vi.advanceTimersByTime(10000);
+
+		mazeGame.moveCursor('right');
+		vi.advanceTimersByTime(10000);
+
+		mazeGame.moveCursor('up');
+		vi.advanceTimersByTime(10000);
+
+		expect(mazeGame.cursor.column).toBe(1);
+		expect(mazeGame.cursor.row).toBe(1);
+		expect(mazeGame.cursor.x).toBe(45);
+		expect(mazeGame.cursor.y).toBe(45);
+	});
+
+	it('cannot move cursor down if cell down is a wall', () => {
+		mockWilson.mockImplementation(() => {
+			return leftJunctionGrid();
+		});
+
+		const mazeGame = new MazeGame();
+
+		mazeGame.moveCursor('down');
+		vi.advanceTimersByTime(10000);
+
+		expect(mazeGame.cursor.column).toBe(0);
+		expect(mazeGame.cursor.row).toBe(0);
+		expect(mazeGame.cursor.x).toBe(15);
+		expect(mazeGame.cursor.y).toBe(15);
+	});
+
+	it('cannot move cursor left if cell left is a wall', () => {
+		mockWilson.mockImplementation(() => {
+			const grid = leftJunctionGrid();
+
+			grid.grid[1][1].link(grid.grid[0][1], true);
+
+			return grid;
+		});
+
+		const mazeGame = new MazeGame();
+
+		mazeGame.moveCursor('right');
+		vi.advanceTimersByTime(10000);
+
+		mazeGame.moveCursor('down');
+		vi.advanceTimersByTime(10000);
+
+		mazeGame.moveCursor('left');
+		vi.advanceTimersByTime(10000);
+
+		expect(mazeGame.cursor.column).toBe(1);
+		expect(mazeGame.cursor.row).toBe(1);
+		expect(mazeGame.cursor.x).toBe(45);
+		expect(mazeGame.cursor.y).toBe(45);
+	});
+
+	it('cannot accept cursor movements while it is moving', () => {
+		const timeoutSpy = vi.spyOn(global, 'setTimeout');
+		mockWilson.mockImplementation(() => southJunctionGrid());
+
+		const mazeGame = new MazeGame();
+
+		mazeGame.moveCursor('down');
+		vi.advanceTimersByTime(100);
+
+		mazeGame.moveCursor('up');
+		vi.advanceTimersByTime(10000);
+
+		expect(mazeGame.cursor.column).toBe(0);
+		expect(mazeGame.cursor.row).toBe(3);
+		expect(mazeGame.cursor.x).toBe(15);
+		expect(mazeGame.cursor.y).toBe(105);
+		expect(timeoutSpy).toHaveBeenCalledTimes(2);
+	});
 
 	// it('levels up when cursor reaches the end cell', () => {});
 });

@@ -3,16 +3,19 @@
 	import wilson from '../model/wilson';
 	import longestPath from '../model/longestPath';
 	import Cell from '../components/Cell.svelte';
-	import MazeGame from '../model/MazeGame';
+	import MazeGame, { type Cursor } from '../model/MazeGame';
 
 	const mazeGame = new MazeGame();
 
-	const cellSize = mazeGame.cellSize;
+	let cursor: Cursor = mazeGame.cursor;
 
-	const cursor = {
-		x: mazeGame.startAndEndCells[0].column,
-		y: mazeGame.startAndEndCells[0].row
+	const handleCursorUpdate = (updatedCursor: Cursor) => {
+		cursor = updatedCursor;
 	};
+
+	mazeGame.onCursorUpdate = handleCursorUpdate;
+
+	const cellSize = mazeGame.cellSize;
 
 	let distances = mazeGame.maze.cells[0].distances();
 
@@ -124,20 +127,21 @@
 	};
 
 	const onKeyDown = (event: KeyboardEvent) => {
+		console.log('onKeyDown');
 		if (event.key === 'ArrowRight') {
-			moveCursor('right');
+			mazeGame.moveCursor('right');
 		}
 
 		if (event.key === 'ArrowLeft') {
-			moveCursor('left');
+			mazeGame.moveCursor('left');
 		}
 
 		if (event.key === 'ArrowDown') {
-			moveCursor('down');
+			mazeGame.moveCursor('down');
 		}
 
 		if (event.key === 'ArrowUp') {
-			moveCursor('up');
+			mazeGame.moveCursor('up');
 		}
 	};
 
@@ -266,13 +270,7 @@
 				{/if}
 			{/each}
 
-			<circle
-				class="cursor"
-				cx={mazeGame.cursorToScreenCoordinates(cursor.x)}
-				cy={mazeGame.cursorToScreenCoordinates(cursor.y)}
-				r="7"
-				fill="#990000"
-			/>
+			<circle class="cursor" cx={cursor.x} cy={cursor.y} r="7" fill="#990000" />
 		</svg>
 	</div>
 

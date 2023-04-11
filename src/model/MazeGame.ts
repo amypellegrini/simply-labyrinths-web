@@ -3,15 +3,21 @@ import Grid from './grid';
 import longestPath from './longestPath';
 import wilson from './wilson';
 
+export type Cursor = {
+	row: number;
+	column: number;
+	x: number;
+	y: number;
+};
+
 export default class MazeGame {
-	maze: Grid;
-	startAndEndCells: Cell[];
-	cursorRow: number;
-	cursorColumn: number;
-	cursorX: number;
-	cursorY: number;
+	private __cursorState: 'idle' | 'moving' = 'idle';
 
 	debug = false;
+
+	maze: Grid;
+	startAndEndCells: Cell[];
+	cursor: Cursor;
 
 	cellSize = 30;
 	columns = 5;
@@ -23,45 +29,79 @@ export default class MazeGame {
 
 	visitedCells = new Map<string, number>();
 
-	constructor() {
+	onCursorUpdate?: (cursor: Cursor) => void;
+
+	constructor(onCursorUpdate?: (cursor: Cursor) => void) {
 		this.maze = wilson(new Grid(this.rows, this.columns));
 		this.startAndEndCells = longestPath(this.maze);
 		this.visitedCells.set(this.startAndEndCells[0].id, 1);
-		this.cursorRow = this.startAndEndCells[0].row;
-		this.cursorColumn = this.startAndEndCells[0].column;
 
-		this.cursorX = this.cursorToScreenCoordinates(this.cursorColumn);
-		this.cursorY = this.cursorToScreenCoordinates(this.cursorRow);
+		const { row, column } = this.startAndEndCells[0];
+
+		this.cursor = {
+			row: row,
+			column: column,
+			x: this.cursorToScreenCoordinates(column),
+			y: this.cursorToScreenCoordinates(row)
+		};
+
+		this.onCursorUpdate = onCursorUpdate;
 	}
 
 	cursorToScreenCoordinates(rowOrColumn: number) {
 		return (rowOrColumn + 1) * this.cellSize - this.cellSize / 2;
 	}
 
-	moveCursor(direction: 'right' | 'left' | 'up' | 'down') {
-		const currentCell = this.maze.grid[this.cursorRow][this.cursorColumn];
-
-		if (direction === 'right' && currentCell.east) {
-			this.cursorColumn += 1;
-			this.cursorX = this.cursorToScreenCoordinates(this.cursorColumn);
+	moveCursor(
+		direction: 'right' | 'left' | 'up' | 'down',
+		bypassStateCheck = false
+	) {
+		if (this.__cursorState === 'moving' && !bypassStateCheck) {
+			return;
 		}
 
-		if (direction === 'down' && currentCell.south) {
-			this.cursorRow += 1;
-			this.cursorY = this.cursorToScreenCoordinates(this.cursorRow);
+		this.__cursorState = 'moving';
+
+		const currentCell = this.maze.grid[this.cursor.row][this.cursor.column];
+
+		if (
+			direction === 'right' &&
+			currentCell.east &&
+			currentCell.linked(currentCell.east)
+		) {
+			this.cursor.column += 1;
+			this.cursor.x = this.cursorToScreenCoordinates(this.cursor.column);
 		}
 
-		if (direction === 'left' && currentCell.west) {
-			this.cursorColumn -= 1;
-			this.cursorX = this.cursorToScreenCoordinates(this.cursorColumn);
+		if (
+			direction === 'down' &&
+			currentCell.south &&
+			currentCell.linked(currentCell.south)
+		) {
+			this.cursor.row += 1;
+			this.cursor.y = this.cursorToScreenCoordinates(this.cursor.row);
 		}
 
-		if (direction === 'up' && currentCell.north) {
-			this.cursorRow -= 1;
-			this.cursorY = this.cursorToScreenCoordinates(this.cursorRow);
+		if (
+			direction === 'left' &&
+			currentCell.west &&
+			currentCell.linked(currentCell.west)
+		) {
+			this.cursor.column -= 1;
+			this.cursor.x = this.cursorToScreenCoordinates(this.cursor.column);
 		}
 
-		const nextCell = this.maze.grid[this.cursorRow][this.cursorColumn];
+		if (
+			direction === 'up' &&
+			currentCell.north &&
+			currentCell.linked(currentCell.north)
+		) {
+			this.cursor.row -= 1;
+			this.cursor.y = this.cursorToScreenCoordinates(this.cursor.row);
+		}
+
+		const nextCell = this.maze.grid[this.cursor.row][this.cursor.column];
+		this.onCursorUpdate?.(this.cursor);
 
 		if (nextCell !== currentCell && nextCell.links.size === 2) {
 			const oppositeDirection = {
@@ -77,7 +117,7 @@ export default class MazeGame {
 				nextCell.linked(nextCell.north)
 			) {
 				setTimeout(() => {
-					this.moveCursor('up');
+					this.moveCursor('up', true);
 				}, 100);
 			}
 
@@ -87,7 +127,7 @@ export default class MazeGame {
 				nextCell.linked(nextCell.south)
 			) {
 				setTimeout(() => {
-					this.moveCursor('down');
+					this.moveCursor('down', true);
 				}, 100);
 			}
 
@@ -97,7 +137,7 @@ export default class MazeGame {
 				nextCell.linked(nextCell.west)
 			) {
 				setTimeout(() => {
-					this.moveCursor('left');
+					this.moveCursor('left', true);
 				}, 100);
 			}
 
@@ -107,9 +147,11 @@ export default class MazeGame {
 				nextCell.linked(nextCell.east)
 			) {
 				setTimeout(() => {
-					this.moveCursor('right');
+					this.moveCursor('right', true);
 				}, 100);
 			}
+		} else {
+			this.__cursorState = 'idle';
 		}
 	}
 }

@@ -9,17 +9,25 @@
 
 	let cursor: Cursor = mazeGame.cursor;
 	let level: number = mazeGame.level;
+	let score: number = mazeGame.score;
+	let cellSize: number = mazeGame.cellSize;
+	let columns: number = mazeGame.columns;
+	let rows: number = mazeGame.rows;
+	let maze: Grid = mazeGame.maze;
 
 	const handleCursorUpdate = (updatedCursor: Cursor) => {
+		score = mazeGame.score;
 		cursor = updatedCursor;
 	};
 
 	mazeGame.onCursorUpdate = handleCursorUpdate;
 	mazeGame.onLevelUp = (newLevel) => {
+		cellSize = mazeGame.cellSize;
+		columns = mazeGame.columns;
+		rows = mazeGame.rows;
+		maze = mazeGame.maze;
 		level = newLevel;
 	};
-
-	const cellSize = mazeGame.cellSize;
 
 	let distances = mazeGame.maze.cells[0].distances();
 
@@ -40,7 +48,6 @@
 	};
 
 	const onKeyDown = (event: KeyboardEvent) => {
-		console.log('onKeyDown');
 		if (event.key === 'ArrowRight') {
 			mazeGame.moveCursor('right');
 		}
@@ -137,7 +144,7 @@
 	<div class="main-body">
 		<div class="score-info">
 			<div class="aside" />
-			<p class="score">{mazeGame.score}</p>
+			<p class="score">{score}</p>
 
 			{#if mazeGame.scoreDelta > 0}
 				<p class="score-delta positive">
@@ -155,8 +162,7 @@
 		</div>
 
 		<svg
-			viewBox="-5 -5 {mazeGame.cellSize * mazeGame.columns +
-				10} {mazeGame.cellSize * mazeGame.rows + 10}"
+			viewBox="-5 -5 {cellSize * columns + 10} {cellSize * rows + 10}"
 			class="maze"
 			on:touchstart={onTouch}
 			on:touchend={onTouch}
@@ -170,7 +176,7 @@
 				fill="#009900"
 			/>
 
-			{#each mazeGame.maze.cells as cell}
+			{#each maze.cells as cell}
 				<Cell {cell} {cellSize} />
 
 				{#if mazeGame.debug}

@@ -60,6 +60,16 @@ export default class MazeGame {
 
 		this.maze = wilson(new Grid(this.rows, this.columns));
 
+		this.visitedCells = new Map<string, number>();
+		this.startAndEndCells = longestPath(this.maze);
+
+		this.cursor = {
+			row: 0,
+			column: 0,
+			x: this.cursorToScreenCoordinates(0),
+			y: this.cursorToScreenCoordinates(0)
+		};
+
 		this.onLevelUp?.(this.level);
 	}
 
@@ -179,7 +189,9 @@ export default class MazeGame {
 				this.cursor.column === this.startAndEndCells[1].column &&
 				this.cursor.row === this.startAndEndCells[1].row
 			) {
-				this.levelUp();
+				setTimeout(() => {
+					this.levelUp();
+				}, 350);
 			} else {
 				if (!this.visitedCells.has(nextCell.id)) {
 					this.visitedCells.set(nextCell.id, 1);

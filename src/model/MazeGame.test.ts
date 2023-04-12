@@ -383,9 +383,14 @@ describe('MazeGame', () => {
 		mazeGame.moveCursor('right');
 		vi.advanceTimersByTime(10000);
 
+		const expectedStartAndEndCells = longestPath(mazeGame.maze);
+
+		expect(mazeGame.startAndEndCells).toEqual(expectedStartAndEndCells);
+		expect(mazeGame.visitedCells.size).toBe(0);
 		expect(mazeGame.level).toBe(2);
 		expect(mazeGame.rows).toBe(8);
 		expect(mazeGame.columns).toBe(8);
+		expect(mazeGame.cursor.column).toBe(mazeGame.startAndEndCells[0].column);
 		expect(mockWilson).toHaveBeenCalledTimes(2);
 		expect(onLevelAppMock).toHaveBeenCalledTimes(1);
 		expect(onLevelAppMock).toHaveBeenCalledWith(2);

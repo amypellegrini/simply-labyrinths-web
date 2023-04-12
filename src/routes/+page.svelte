@@ -14,6 +14,7 @@
 	let columns: number = mazeGame.columns;
 	let rows: number = mazeGame.rows;
 	let maze: Grid = mazeGame.maze;
+	let startAndEndCells = mazeGame.startAndEndCells;
 
 	const handleCursorUpdate = (updatedCursor: Cursor) => {
 		score = mazeGame.score;
@@ -26,6 +27,8 @@
 		columns = mazeGame.columns;
 		rows = mazeGame.rows;
 		maze = mazeGame.maze;
+		startAndEndCells = mazeGame.startAndEndCells;
+		cursor = mazeGame.cursor;
 		level = newLevel;
 	};
 
@@ -168,10 +171,8 @@
 			on:touchend={onTouch}
 		>
 			<circle
-				cx={(mazeGame.startAndEndCells[1].column + 1) * mazeGame.cellSize -
-					mazeGame.cellSize / 2}
-				cy={(mazeGame.startAndEndCells[1].row + 1) * mazeGame.cellSize -
-					mazeGame.cellSize / 2}
+				cx={(startAndEndCells[1].column + 1) * cellSize - cellSize / 2}
+				cy={(startAndEndCells[1].row + 1) * cellSize - cellSize / 2}
 				r="7"
 				fill="#009900"
 			/>

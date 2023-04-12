@@ -388,6 +388,7 @@ describe('MazeGame', () => {
 		expect(mazeGame.columns).toBe(8);
 		expect(mockWilson).toHaveBeenCalledTimes(2);
 		expect(onLevelAppMock).toHaveBeenCalledTimes(1);
+		expect(onLevelAppMock).toHaveBeenCalledWith(2);
 	});
 
 	it('keeps increasing level and grid size when levelling up', () => {

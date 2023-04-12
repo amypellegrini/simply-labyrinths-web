@@ -8,12 +8,16 @@
 	const mazeGame = new MazeGame();
 
 	let cursor: Cursor = mazeGame.cursor;
+	let level: number = mazeGame.level;
 
 	const handleCursorUpdate = (updatedCursor: Cursor) => {
 		cursor = updatedCursor;
 	};
 
 	mazeGame.onCursorUpdate = handleCursorUpdate;
+	mazeGame.onLevelUp = (newLevel) => {
+		level = newLevel;
+	};
 
 	const cellSize = mazeGame.cellSize;
 
@@ -122,7 +126,7 @@
 <header class="header">
 	<div />
 	<h1>Simply Labyrinths</h1>
-	<p>Level {mazeGame.level}</p>
+	<p>Level {level}</p>
 </header>
 
 <svelte:window on:keydown={onKeyDown} />

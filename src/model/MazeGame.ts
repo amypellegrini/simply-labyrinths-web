@@ -30,6 +30,7 @@ export default class MazeGame {
 	visitedCells = new Map<string, number>();
 
 	onCursorUpdate?: (cursor: Cursor) => void;
+	onLevelUp?: (level: number) => void;
 
 	constructor(onCursorUpdate?: (cursor: Cursor) => void) {
 		this.maze = wilson(new Grid(this.rows, this.columns));
@@ -58,6 +59,8 @@ export default class MazeGame {
 		this.level += 1;
 
 		this.maze = wilson(new Grid(this.rows, this.columns));
+
+		this.onLevelUp?.(this.level);
 	}
 
 	moveCursor(
@@ -67,8 +70,6 @@ export default class MazeGame {
 		if (this.__cursorState === 'moving' && !bypassStateCheck) {
 			return;
 		}
-
-		this.__cursorState = 'moving';
 
 		const currentCell = this.maze.grid[this.cursor.row][this.cursor.column];
 
@@ -109,9 +110,20 @@ export default class MazeGame {
 		}
 
 		const nextCell = this.maze.grid[this.cursor.row][this.cursor.column];
-		this.onCursorUpdate?.(this.cursor);
 
 		if (nextCell !== currentCell) {
+			this.__cursorState = 'moving';
+
+			if (this.visitedCells.has(nextCell.id)) {
+				this.scoreDelta = -5;
+			} else {
+				this.scoreDelta = 3;
+			}
+
+			this.score += this.scoreDelta;
+
+			this.onCursorUpdate?.(this.cursor);
+
 			if (nextCell.links.size === 2) {
 				const oppositeDirection = {
 					right: 'left',

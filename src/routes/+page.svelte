@@ -35,97 +35,6 @@
 		distances = mazeGame.maze.cells[0].distances();
 	};
 
-	const moveCursor = (direction: string) => {
-		const cell = mazeGame.maze.grid[cursor.y][cursor.x];
-
-		if (direction === 'right' && cell.east && cell.linked(cell.east)) {
-			cursor.x += 1;
-		}
-
-		if (direction === 'left' && cell.west && cell.linked(cell.west)) {
-			cursor.x -= 1;
-		}
-
-		if (direction === 'down' && cell.south && cell.linked(cell.south)) {
-			cursor.y += 1;
-		}
-
-		if (direction === 'up' && cell.north && cell.linked(cell.north)) {
-			cursor.y -= 1;
-		}
-
-		const newCell = mazeGame.maze.grid[cursor.y][cursor.x];
-
-		if (cell !== newCell) {
-			if (mazeGame.visitedCells.has(newCell.id)) {
-				mazeGame.scoreDelta = -5;
-			} else {
-				mazeGame.visitedCells.set(newCell.id, 1);
-				mazeGame.scoreDelta = 3;
-			}
-
-			mazeGame.score += mazeGame.scoreDelta;
-
-			if (newCell.links.size === 2) {
-				const oppositeDirection = {
-					right: 'left',
-					left: 'right',
-					down: 'up',
-					up: 'down'
-				}[direction];
-
-				if (
-					oppositeDirection !== 'up' &&
-					newCell.north &&
-					newCell.linked(newCell.north)
-				) {
-					setTimeout(() => {
-						moveCursor('up');
-					}, 100);
-				}
-
-				if (
-					oppositeDirection !== 'down' &&
-					newCell.south &&
-					newCell.linked(newCell.south)
-				) {
-					setTimeout(() => {
-						moveCursor('down');
-					}, 100);
-				}
-
-				if (
-					oppositeDirection !== 'left' &&
-					newCell.west &&
-					newCell.linked(newCell.west)
-				) {
-					setTimeout(() => {
-						moveCursor('left');
-					}, 100);
-				}
-
-				if (
-					oppositeDirection !== 'right' &&
-					newCell.east &&
-					newCell.linked(newCell.east)
-				) {
-					setTimeout(() => {
-						moveCursor('right');
-					}, 100);
-				}
-			}
-		}
-
-		if (
-			cursor.x === mazeGame.startAndEndCells[1].column &&
-			cursor.y === mazeGame.startAndEndCells[1].row
-		) {
-			setTimeout(() => {
-				levelUp();
-			}, 500);
-		}
-	};
-
 	const onKeyDown = (event: KeyboardEvent) => {
 		console.log('onKeyDown');
 		if (event.key === 'ArrowRight') {
@@ -177,15 +86,15 @@
 		) {
 			if (Math.abs(deltaX) > Math.abs(deltaY)) {
 				if (deltaX > 0) {
-					moveCursor('right');
+					mazeGame.moveCursor('right');
 				} else {
-					moveCursor('left');
+					mazeGame.moveCursor('left');
 				}
 			} else {
 				if (deltaY > 0) {
-					moveCursor('down');
+					mazeGame.moveCursor('down');
 				} else {
-					moveCursor('up');
+					mazeGame.moveCursor('up');
 				}
 			}
 		}

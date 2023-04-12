@@ -369,8 +369,11 @@ describe('MazeGame', () => {
 
 	it('levels up when cursor reaches the end cell', () => {
 		mockWilson.mockImplementation(() => southJunctionGrid());
+		const onLevelAppMock = vi.fn();
 
 		const mazeGame = new MazeGame();
+
+		mazeGame.onLevelUp = onLevelAppMock;
 
 		mockWilson.mockImplementation(() => southJunctionGrid(new Grid(8, 8)));
 
@@ -384,6 +387,7 @@ describe('MazeGame', () => {
 		expect(mazeGame.rows).toBe(8);
 		expect(mazeGame.columns).toBe(8);
 		expect(mockWilson).toHaveBeenCalledTimes(2);
+		expect(onLevelAppMock).toHaveBeenCalledTimes(1);
 	});
 
 	it('keeps increasing level and grid size when levelling up', () => {
@@ -406,5 +410,38 @@ describe('MazeGame', () => {
 		expect(mazeGame.level).toBe(4);
 		expect(mazeGame.rows).toBe(14);
 		expect(mazeGame.columns).toBe(14);
+	});
+
+	it('increases the score by 3 for every cursor movement', () => {
+		mockWilson.mockImplementation(() => southJunctionGrid());
+
+		const mazeGame = new MazeGame();
+
+		expect(mazeGame.score).toBe(0);
+		expect(mazeGame.scoreDelta).toBe(0);
+
+		mazeGame.moveCursor('down');
+		vi.advanceTimersByTime(10000);
+
+		expect(mazeGame.score).toBe(9);
+		expect(mazeGame.scoreDelta).toBe(3);
+	});
+
+	it('decreases the score by 5 for visiting the same place', () => {
+		mockWilson.mockImplementation(() => southJunctionGrid());
+
+		const mazeGame = new MazeGame();
+
+		expect(mazeGame.score).toBe(0);
+		expect(mazeGame.scoreDelta).toBe(0);
+
+		mazeGame.moveCursor('down');
+		vi.advanceTimersByTime(10000);
+
+		mazeGame.moveCursor('up');
+		vi.advanceTimersByTime(10000);
+
+		expect(mazeGame.score).toBe(-6);
+		expect(mazeGame.scoreDelta).toBe(-5);
 	});
 });

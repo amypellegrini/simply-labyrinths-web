@@ -6,47 +6,60 @@ import wilson from './wilson';
 export type Cursor = {
 	row: number;
 	column: number;
-	x: number;
-	y: number;
 };
+
+type Direction = 'right' | 'left' | 'up' | 'down';
 
 export default class MazeGame {
 	private __cursorState: 'idle' | 'moving' = 'idle';
 
 	debug = false;
 
-	maze: Grid;
-	startAndEndCells: Cell[];
+	columns = 5;
+	rows = 5;
+
+	maze: Grid = wilson(new Grid(this.rows, this.columns));
+	startAndEndCells: Cell[] = longestPath(this.maze);
 	cursor: Cursor;
 
 	cellSize = 30;
-	columns = 5;
-	rows = 5;
+
 	level = 1;
 	score = 0;
 	scoreDelta = 0;
 	rowsAndColumnsDelta = 3;
 
-	visitedCells = new Map<string, number>();
+	visitedCells: Map<string, number> = new Map<string, number>();
 
 	onCursorUpdate?: (cursor: Cursor) => void;
 	onLevelUp?: (level: number) => void;
 
 	constructor(onCursorUpdate?: (cursor: Cursor) => void) {
+		const { row, column } = this.startAndEndCells[0];
+
+		this.visitedCells.set(this.startAndEndCells[0].id, 1);
+
+		this.cursor = {
+			row: row,
+			column: column
+		};
+
+		this.onCursorUpdate = onCursorUpdate;
+	}
+
+	private __initLevel() {
 		this.maze = wilson(new Grid(this.rows, this.columns));
+
 		this.startAndEndCells = longestPath(this.maze);
+		this.visitedCells = new Map<string, number>();
 		this.visitedCells.set(this.startAndEndCells[0].id, 1);
 
 		const { row, column } = this.startAndEndCells[0];
 
 		this.cursor = {
 			row: row,
-			column: column,
-			x: this.cursorToScreenCoordinates(column),
-			y: this.cursorToScreenCoordinates(row)
+			column: column
 		};
-
-		this.onCursorUpdate = onCursorUpdate;
 	}
 
 	cursorToScreenCoordinates(rowOrColumn: number) {
@@ -58,66 +71,65 @@ export default class MazeGame {
 		this.columns += this.rowsAndColumnsDelta;
 		this.level += 1;
 
-		this.maze = wilson(new Grid(this.rows, this.columns));
-
-		this.visitedCells = new Map<string, number>();
-		this.startAndEndCells = longestPath(this.maze);
-
-		this.cursor = {
-			row: 0,
-			column: 0,
-			x: this.cursorToScreenCoordinates(0),
-			y: this.cursorToScreenCoordinates(0)
-		};
+		this.__initLevel();
 
 		this.onLevelUp?.(this.level);
 	}
 
-	moveCursor(
-		direction: 'right' | 'left' | 'up' | 'down',
-		bypassStateCheck = false
-	) {
+	private __navigationConfig: {
+		[key: string]: {
+			isLinked: (cell: Cell) => boolean;
+			cursorUpdate: { property: 'row' | 'column'; value: number };
+		};
+	} = {
+		right: {
+			isLinked: (cell: Cell) => (cell.east && cell.linked(cell.east)) || false,
+			cursorUpdate: {
+				property: 'column',
+				value: 1
+			}
+		},
+		left: {
+			isLinked: (cell: Cell) => (cell.west && cell.linked(cell.west)) || false,
+			cursorUpdate: {
+				property: 'column',
+				value: -1
+			}
+		},
+		up: {
+			isLinked: (cell: Cell) =>
+				(cell.north && cell.linked(cell.north)) || false,
+			cursorUpdate: {
+				property: 'row',
+				value: -1
+			}
+		},
+		down: {
+			isLinked: (cell: Cell) =>
+				(cell.south && cell.linked(cell.south)) || false,
+			cursorUpdate: {
+				property: 'row',
+				value: 1
+			}
+		}
+	};
+
+	private __handleCursorMovement(direction: Direction, currentCell: Cell) {
+		const { isLinked, cursorUpdate } = this.__navigationConfig[direction];
+
+		if (isLinked(currentCell)) {
+			this.cursor[cursorUpdate.property] += cursorUpdate.value;
+		}
+	}
+
+	moveCursor(direction: Direction, bypassStateCheck = false) {
 		if (this.__cursorState === 'moving' && !bypassStateCheck) {
 			return;
 		}
 
 		const currentCell = this.maze.grid[this.cursor.row][this.cursor.column];
 
-		if (
-			direction === 'right' &&
-			currentCell.east &&
-			currentCell.linked(currentCell.east)
-		) {
-			this.cursor.column += 1;
-			this.cursor.x = this.cursorToScreenCoordinates(this.cursor.column);
-		}
-
-		if (
-			direction === 'down' &&
-			currentCell.south &&
-			currentCell.linked(currentCell.south)
-		) {
-			this.cursor.row += 1;
-			this.cursor.y = this.cursorToScreenCoordinates(this.cursor.row);
-		}
-
-		if (
-			direction === 'left' &&
-			currentCell.west &&
-			currentCell.linked(currentCell.west)
-		) {
-			this.cursor.column -= 1;
-			this.cursor.x = this.cursorToScreenCoordinates(this.cursor.column);
-		}
-
-		if (
-			direction === 'up' &&
-			currentCell.north &&
-			currentCell.linked(currentCell.north)
-		) {
-			this.cursor.row -= 1;
-			this.cursor.y = this.cursorToScreenCoordinates(this.cursor.row);
-		}
+		this.__handleCursorMovement(direction, currentCell);
 
 		const nextCell = this.maze.grid[this.cursor.row][this.cursor.column];
 

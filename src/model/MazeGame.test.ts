@@ -79,18 +79,8 @@ describe('MazeGame', () => {
 		expect(mazeGame.scoreDelta).toBe(0);
 		expect(mazeGame.level).toBe(1);
 		expect(mazeGame.rowsAndColumnsDelta).toBe(3);
-
 		expect(mazeGame.cursor.row).toBe(mazeGame.startAndEndCells[0].row);
 		expect(mazeGame.cursor.column).toBe(mazeGame.startAndEndCells[0].column);
-
-		const expectedCursorX =
-			(mazeGame.cursor.column + 1) * mazeGame.cellSize - mazeGame.cellSize / 2;
-
-		const expectedCursorY =
-			(mazeGame.cursor.row + 1) * mazeGame.cellSize - mazeGame.cellSize / 2;
-
-		expect(mazeGame.cursor.x).toBe(expectedCursorX);
-		expect(mazeGame.cursor.y).toBe(expectedCursorY);
 
 		expect(wilson).toHaveBeenCalled();
 	});
@@ -144,8 +134,6 @@ describe('MazeGame', () => {
 
 		expect(mazeGame.cursor.column).toBe(3);
 		expect(mazeGame.cursor.row).toBe(0);
-		expect(mazeGame.cursor.x).toBe(105);
-		expect(mazeGame.cursor.y).toBe(15);
 		expect(timeoutSpy).toHaveBeenCalledTimes(2);
 	});
 
@@ -163,7 +151,6 @@ describe('MazeGame', () => {
 		vi.advanceTimersByTime(10000);
 
 		expect(mazeGame.cursor.column).toBe(4);
-		expect(mazeGame.cursor.x).toBe(135);
 		expect(timeoutSpy).toHaveBeenCalledTimes(2);
 	});
 
@@ -184,8 +171,6 @@ describe('MazeGame', () => {
 
 		expect(mazeGame.cursor.column).toBe(0);
 		expect(mazeGame.cursor.row).toBe(3);
-		expect(mazeGame.cursor.x).toBe(15);
-		expect(mazeGame.cursor.y).toBe(105);
 		expect(timeoutSpy).toHaveBeenCalledTimes(10);
 	});
 
@@ -200,8 +185,6 @@ describe('MazeGame', () => {
 
 		expect(mazeGame.cursor.column).toBe(0);
 		expect(mazeGame.cursor.row).toBe(3);
-		expect(mazeGame.cursor.x).toBe(15);
-		expect(mazeGame.cursor.y).toBe(105);
 		expect(timeoutSpy).toHaveBeenCalledTimes(2);
 	});
 
@@ -219,7 +202,6 @@ describe('MazeGame', () => {
 		vi.advanceTimersByTime(10000);
 
 		expect(mazeGame.cursor.row).toBe(4);
-		expect(mazeGame.cursor.y).toBe(135);
 		expect(timeoutSpy).toHaveBeenCalledTimes(2);
 	});
 
@@ -241,8 +223,6 @@ describe('MazeGame', () => {
 
 		expect(mazeGame.cursor.column).toBe(0);
 		expect(mazeGame.cursor.row).toBe(1);
-		expect(mazeGame.cursor.x).toBe(15);
-		expect(mazeGame.cursor.y).toBe(45);
 		expect(timeoutSpy).toHaveBeenCalledTimes(2);
 	});
 
@@ -263,8 +243,6 @@ describe('MazeGame', () => {
 
 		expect(mazeGame.cursor.column).toBe(3);
 		expect(mazeGame.cursor.row).toBe(0);
-		expect(mazeGame.cursor.x).toBe(105);
-		expect(mazeGame.cursor.y).toBe(15);
 		expect(timeoutSpy).toHaveBeenCalledTimes(5);
 	});
 
@@ -280,8 +258,6 @@ describe('MazeGame', () => {
 
 		expect(mazeGame.cursor.column).toBe(0);
 		expect(mazeGame.cursor.row).toBe(0);
-		expect(mazeGame.cursor.x).toBe(15);
-		expect(mazeGame.cursor.y).toBe(15);
 	});
 
 	it('cannot move cursor up if cell up is a wall', () => {
@@ -302,8 +278,6 @@ describe('MazeGame', () => {
 
 		expect(mazeGame.cursor.column).toBe(1);
 		expect(mazeGame.cursor.row).toBe(1);
-		expect(mazeGame.cursor.x).toBe(45);
-		expect(mazeGame.cursor.y).toBe(45);
 	});
 
 	it('cannot move cursor down if cell down is a wall', () => {
@@ -318,8 +292,6 @@ describe('MazeGame', () => {
 
 		expect(mazeGame.cursor.column).toBe(0);
 		expect(mazeGame.cursor.row).toBe(0);
-		expect(mazeGame.cursor.x).toBe(15);
-		expect(mazeGame.cursor.y).toBe(15);
 	});
 
 	it('cannot move cursor left if cell left is a wall', () => {
@@ -344,8 +316,6 @@ describe('MazeGame', () => {
 
 		expect(mazeGame.cursor.column).toBe(1);
 		expect(mazeGame.cursor.row).toBe(1);
-		expect(mazeGame.cursor.x).toBe(45);
-		expect(mazeGame.cursor.y).toBe(45);
 	});
 
 	it('cannot accept cursor movements while it is moving', () => {
@@ -362,8 +332,6 @@ describe('MazeGame', () => {
 
 		expect(mazeGame.cursor.column).toBe(0);
 		expect(mazeGame.cursor.row).toBe(3);
-		expect(mazeGame.cursor.x).toBe(15);
-		expect(mazeGame.cursor.y).toBe(105);
 		expect(timeoutSpy).toHaveBeenCalledTimes(2);
 	});
 
@@ -386,7 +354,7 @@ describe('MazeGame', () => {
 		const expectedStartAndEndCells = longestPath(mazeGame.maze);
 
 		expect(mazeGame.startAndEndCells).toEqual(expectedStartAndEndCells);
-		expect(mazeGame.visitedCells.size).toBe(0);
+		expect(mazeGame.visitedCells.size).toBe(1);
 		expect(mazeGame.level).toBe(2);
 		expect(mazeGame.rows).toBe(8);
 		expect(mazeGame.columns).toBe(8);

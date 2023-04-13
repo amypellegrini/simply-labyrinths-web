@@ -1,7 +1,5 @@
 <script lang="ts">
-	import Grid from '../model/grid';
-	import wilson from '../model/wilson';
-	import longestPath from '../model/longestPath';
+	import type Grid from '../model/grid';
 	import Cell from '../components/Cell.svelte';
 	import MazeGame, { type Cursor } from '../model/MazeGame';
 
@@ -15,13 +13,13 @@
 	let rows: number = mazeGame.rows;
 	let maze: Grid = mazeGame.maze;
 	let startAndEndCells = mazeGame.startAndEndCells;
+	let distances = mazeGame.maze.cells[0].distances();
 
-	const handleCursorUpdate = (updatedCursor: Cursor) => {
+	mazeGame.onCursorUpdate = (updatedCursor: Cursor) => {
 		score = mazeGame.score;
 		cursor = updatedCursor;
 	};
 
-	mazeGame.onCursorUpdate = handleCursorUpdate;
 	mazeGame.onLevelUp = (newLevel) => {
 		cellSize = mazeGame.cellSize;
 		columns = mazeGame.columns;
@@ -29,25 +27,8 @@
 		maze = mazeGame.maze;
 		startAndEndCells = mazeGame.startAndEndCells;
 		cursor = mazeGame.cursor;
-		level = newLevel;
-	};
-
-	let distances = mazeGame.maze.cells[0].distances();
-
-	const levelUp = () => {
-		mazeGame.rows += mazeGame.rowsAndColumnsDelta;
-		mazeGame.columns += mazeGame.rowsAndColumnsDelta;
-		mazeGame.maze = wilson(new Grid(mazeGame.rows, mazeGame.columns));
-		mazeGame.startAndEndCells = longestPath(mazeGame.maze);
-		mazeGame.visitedCells = new Map();
-		mazeGame.level += 1;
-
-		mazeGame.visitedCells.set(mazeGame.startAndEndCells[0].id, 1);
-
-		cursor.x = mazeGame.startAndEndCells[0].column;
-		cursor.y = mazeGame.startAndEndCells[0].row;
-
 		distances = mazeGame.maze.cells[0].distances();
+		level = newLevel;
 	};
 
 	const onKeyDown = (event: KeyboardEvent) => {
@@ -190,7 +171,13 @@
 				{/if}
 			{/each}
 
-			<circle class="cursor" cx={cursor.x} cy={cursor.y} r="7" fill="#990000" />
+			<circle
+				class="cursor"
+				cx={mazeGame.cursorToScreenCoordinates(cursor.column)}
+				cy={mazeGame.cursorToScreenCoordinates(cursor.row)}
+				r="7"
+				fill="#990000"
+			/>
 		</svg>
 	</div>
 

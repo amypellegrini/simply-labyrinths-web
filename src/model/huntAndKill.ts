@@ -27,7 +27,7 @@ export default function huntAndKill(grid: Grid) {
 					currentCell = cell;
 					const neighbor =
 						visitedNeighbors[random(0, visitedNeighbors.length - 1)];
-					currentCell.link(neighbor);
+					currentCell.link(neighbor, true);
 					break;
 				}
 			}

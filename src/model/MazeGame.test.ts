@@ -2,7 +2,7 @@ import { vi, describe } from 'vitest';
 import MazeGame from './MazeGame';
 import Grid from './grid';
 import longestPath from './longestPath';
-import wilson from './wilson';
+import generateMaze from './generateMaze';
 
 vi.useFakeTimers();
 
@@ -52,18 +52,20 @@ function northJunctionGrid(optionalGrid?: Grid) {
 	return grid;
 }
 
-vi.mock('./wilson', () => {
+vi.mock('./generateMaze', () => {
 	return {
 		__esModule: true,
 		default: vi.fn(() => new Grid(5, 5))
 	};
 });
 
-const mockWilson = wilson as jest.MockedFunction<typeof wilson>;
+const mockGenerateMaze = generateMaze as jest.MockedFunction<
+	typeof generateMaze
+>;
 
 describe('MazeGame', () => {
 	beforeEach(() => {
-		mockWilson.mockClear();
+		mockGenerateMaze.mockClear();
 	});
 
 	it('initializes properties correctly', () => {
@@ -82,7 +84,7 @@ describe('MazeGame', () => {
 		expect(mazeGame.cursor.row).toBe(mazeGame.startAndEndCells[0].row);
 		expect(mazeGame.cursor.column).toBe(mazeGame.startAndEndCells[0].column);
 
-		expect(wilson).toHaveBeenCalled();
+		expect(generateMaze).toHaveBeenCalled();
 	});
 
 	it('has a start and end cells', () => {
@@ -93,7 +95,7 @@ describe('MazeGame', () => {
 	});
 
 	it('keeps track of visited cells', () => {
-		mockWilson.mockImplementation(() => southJunctionGrid());
+		mockGenerateMaze.mockImplementation(() => southJunctionGrid());
 
 		const mazeGame = new MazeGame();
 
@@ -124,7 +126,7 @@ describe('MazeGame', () => {
 	it('moves cursor to the east until the next junction', () => {
 		const timeoutSpy = vi.spyOn(global, 'setTimeout');
 
-		mockWilson.mockImplementation(() => leftJunctionGrid());
+		mockGenerateMaze.mockImplementation(() => leftJunctionGrid());
 
 		const mazeGame = new MazeGame();
 
@@ -140,7 +142,7 @@ describe('MazeGame', () => {
 	it('moves cursor to the east until the next wall', async () => {
 		const timeoutSpy = vi.spyOn(global, 'setTimeout');
 
-		mockWilson.mockImplementation(() => leftJunctionGrid());
+		mockGenerateMaze.mockImplementation(() => leftJunctionGrid());
 
 		const mazeGame = new MazeGame();
 
@@ -155,7 +157,9 @@ describe('MazeGame', () => {
 	});
 
 	it('moves cursor to the west until the next junction', async () => {
-		mockWilson.mockImplementation(() => southJunctionGrid(leftJunctionGrid()));
+		mockGenerateMaze.mockImplementation(() =>
+			southJunctionGrid(leftJunctionGrid())
+		);
 		const timeoutSpy = vi.spyOn(global, 'setTimeout');
 
 		const mazeGame = new MazeGame();
@@ -176,7 +180,7 @@ describe('MazeGame', () => {
 
 	it('moves cursor to the south until the next junction', async () => {
 		const timeoutSpy = vi.spyOn(global, 'setTimeout');
-		mockWilson.mockImplementation(() => southJunctionGrid());
+		mockGenerateMaze.mockImplementation(() => southJunctionGrid());
 
 		const mazeGame = new MazeGame();
 
@@ -191,7 +195,7 @@ describe('MazeGame', () => {
 	it('moves cursor to the south until the next wall', async () => {
 		const timeoutSpy = vi.spyOn(global, 'setTimeout');
 
-		mockWilson.mockImplementation(() => southJunctionGrid());
+		mockGenerateMaze.mockImplementation(() => southJunctionGrid());
 
 		const mazeGame = new MazeGame();
 
@@ -208,7 +212,7 @@ describe('MazeGame', () => {
 	it('moves cursor to the north until the next junction', async () => {
 		const timeoutSpy = vi.spyOn(global, 'setTimeout');
 
-		mockWilson.mockImplementation(() => northJunctionGrid());
+		mockGenerateMaze.mockImplementation(() => northJunctionGrid());
 
 		const mazeGame = new MazeGame();
 
@@ -229,7 +233,7 @@ describe('MazeGame', () => {
 	it('moves cursor north then east until the next junction', async () => {
 		const timeoutSpy = vi.spyOn(global, 'setTimeout');
 
-		mockWilson.mockImplementation(() => {
+		mockGenerateMaze.mockImplementation(() => {
 			return southJunctionGrid(leftJunctionGrid());
 		});
 
@@ -247,7 +251,7 @@ describe('MazeGame', () => {
 	});
 
 	it('cannot move cursor right if cell to the right is a wall', () => {
-		mockWilson.mockImplementation(() => {
+		mockGenerateMaze.mockImplementation(() => {
 			return southJunctionGrid();
 		});
 
@@ -261,7 +265,7 @@ describe('MazeGame', () => {
 	});
 
 	it('cannot move cursor up if cell up is a wall', () => {
-		mockWilson.mockImplementation(() => {
+		mockGenerateMaze.mockImplementation(() => {
 			return northJunctionGrid();
 		});
 
@@ -281,7 +285,7 @@ describe('MazeGame', () => {
 	});
 
 	it('cannot move cursor down if cell down is a wall', () => {
-		mockWilson.mockImplementation(() => {
+		mockGenerateMaze.mockImplementation(() => {
 			return leftJunctionGrid();
 		});
 
@@ -295,7 +299,7 @@ describe('MazeGame', () => {
 	});
 
 	it('cannot move cursor left if cell left is a wall', () => {
-		mockWilson.mockImplementation(() => {
+		mockGenerateMaze.mockImplementation(() => {
 			const grid = leftJunctionGrid();
 
 			grid.grid[1][1].link(grid.grid[0][1], true);
@@ -320,7 +324,7 @@ describe('MazeGame', () => {
 
 	it('cannot accept cursor movements while it is moving', () => {
 		const timeoutSpy = vi.spyOn(global, 'setTimeout');
-		mockWilson.mockImplementation(() => southJunctionGrid());
+		mockGenerateMaze.mockImplementation(() => southJunctionGrid());
 
 		const mazeGame = new MazeGame();
 
@@ -336,14 +340,16 @@ describe('MazeGame', () => {
 	});
 
 	it('levels up when cursor reaches the end cell', () => {
-		mockWilson.mockImplementation(() => southJunctionGrid());
+		mockGenerateMaze.mockImplementation(() => southJunctionGrid());
 		const onLevelAppMock = vi.fn();
 
 		const mazeGame = new MazeGame();
 
 		mazeGame.onLevelUp = onLevelAppMock;
 
-		mockWilson.mockImplementation(() => southJunctionGrid(new Grid(8, 8)));
+		mockGenerateMaze.mockImplementation(() =>
+			southJunctionGrid(new Grid(8, 8))
+		);
 
 		mazeGame.moveCursor('down');
 		vi.advanceTimersByTime(10000);
@@ -359,7 +365,7 @@ describe('MazeGame', () => {
 		expect(mazeGame.rows).toBe(8);
 		expect(mazeGame.columns).toBe(8);
 		expect(mazeGame.cursor.column).toBe(mazeGame.startAndEndCells[0].column);
-		expect(mockWilson).toHaveBeenCalledTimes(2);
+		expect(mockGenerateMaze).toHaveBeenCalledTimes(2);
 		expect(onLevelAppMock).toHaveBeenCalledTimes(1);
 		expect(onLevelAppMock).toHaveBeenCalledWith(2);
 	});
@@ -387,7 +393,7 @@ describe('MazeGame', () => {
 	});
 
 	it('increases the score by 3 for every cursor movement', () => {
-		mockWilson.mockImplementation(() => southJunctionGrid());
+		mockGenerateMaze.mockImplementation(() => southJunctionGrid());
 
 		const mazeGame = new MazeGame();
 
@@ -402,7 +408,7 @@ describe('MazeGame', () => {
 	});
 
 	it('decreases the score by 5 for visiting the same place', () => {
-		mockWilson.mockImplementation(() => southJunctionGrid());
+		mockGenerateMaze.mockImplementation(() => southJunctionGrid());
 
 		const mazeGame = new MazeGame();
 

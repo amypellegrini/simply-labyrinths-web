@@ -1,7 +1,7 @@
 import type Cell from './cell';
+import generateMaze from './generateMaze';
 import Grid from './grid';
 import longestPath from './longestPath';
-import wilson from './wilson';
 
 export type Cursor = {
 	row: number;
@@ -18,7 +18,7 @@ export default class MazeGame {
 	columns = 5;
 	rows = 5;
 
-	maze: Grid = wilson(new Grid(this.rows, this.columns));
+	maze: Grid = generateMaze(new Grid(this.rows, this.columns));
 	startAndEndCells: Cell[] = longestPath(this.maze);
 	cursor: Cursor;
 
@@ -48,7 +48,7 @@ export default class MazeGame {
 	}
 
 	private __initLevel() {
-		this.maze = wilson(new Grid(this.rows, this.columns));
+		this.maze = generateMaze(new Grid(this.rows, this.columns));
 
 		this.startAndEndCells = longestPath(this.maze);
 		this.visitedCells = new Map<string, number>();

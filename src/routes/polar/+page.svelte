@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Grid from '../../model/grid';
+	import PolarGrid from '../../model/PolarGrid';
 
-	const grid = new Grid(10, 10);
+	const grid = new PolarGrid(5);
 	const cellSize = 10;
 	const viewBoxSize = 2 * grid.rows * cellSize;
 	const center = viewBoxSize / 2;

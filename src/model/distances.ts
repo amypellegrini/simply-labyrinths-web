@@ -1,21 +1,21 @@
 import type Cell from './cell';
 
-export default class Distances {
-	root: Cell;
-	cells: Map<Cell, number>;
+export default class Distances<TCell> {
+	root: TCell;
+	cells: Map<TCell, number>;
 
-	constructor(root: Cell) {
+	constructor(root: TCell) {
 		this.root = root;
 		this.cells = new Map();
 
 		this.cells.set(this.root, 0);
 	}
 
-	setCellDistance(cell: Cell, distance: number) {
+	setCellDistance(cell: TCell, distance: number) {
 		this.cells.set(cell, distance);
 	}
 
-	max(): [Cell, number] {
+	max(): [TCell, number] {
 		let maxCell = this.root;
 		let maxDistance = 0;
 

@@ -1,18 +1,18 @@
+import BaseGrid from './BaseGrid';
 import Cell from './cell';
-import random from './random';
 
 type Row = Cell[];
 
-export default class Grid {
+export default class Grid extends BaseGrid<Cell> {
 	rows: number;
 	columns: number;
 	grid: Row[];
-	cells: Cell[];
 
 	constructor(rows: number, columns: number) {
+		super();
+
 		this.rows = rows;
 		this.columns = columns;
-		this.cells = [];
 		this.grid = this.prepareGrid();
 		this.configureCells();
 	}
@@ -49,13 +49,5 @@ export default class Grid {
 				cell.west = this.grid[cell.row][cell.column - 1];
 			}
 		});
-	}
-
-	size() {
-		return this.columns * this.rows;
-	}
-
-	randomCell() {
-		return this.cells[random(0, this.cells.length)];
 	}
 }

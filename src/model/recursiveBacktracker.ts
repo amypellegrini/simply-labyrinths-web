@@ -1,15 +1,18 @@
-import type Cell from './cell';
-import type Grid from './grid';
+import type BaseCell from './BaseCell';
+import type BaseGrid from './BaseGrid';
 import random from './random';
 
-export default function recursiveBacktracker(grid: Grid) {
-	let currentCell: Cell | null = grid.randomCell();
-	const stack: Cell[] = [];
+export default function recursiveBacktracker<
+	TGrid extends BaseGrid<TCell>,
+	TCell extends BaseCell<TCell>
+>(grid: TGrid) {
+	let currentCell: BaseCell<TCell> | null = grid.randomCell();
+	const stack: BaseCell<TCell>[] = [];
 
 	while (currentCell) {
-		const unvisitedNeighbors: Cell[] = currentCell
+		const unvisitedNeighbors: BaseCell<TCell>[] = currentCell
 			.neighbours()
-			.filter((neighbour: Cell) => !neighbour.links.size);
+			.filter((neighbour: BaseCell<TCell>) => !neighbour.links.size);
 
 		if (unvisitedNeighbors.length) {
 			stack.push(currentCell);

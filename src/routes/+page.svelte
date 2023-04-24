@@ -171,6 +171,18 @@
 				{/if}
 			{/each}
 
+			{#if mazeGame.mazePowerUps.size > 0}
+				{#each Array.from(mazeGame.mazePowerUps) as [key, value]}
+					{@const [row, column] = key.split('-')}
+					<circle
+						cx={(Number(column) + 1) * cellSize - cellSize / 2}
+						cy={(Number(row) + 1) * cellSize - cellSize / 2}
+						r="7"
+						fill="#000099"
+					/>
+				{/each}
+			{/if}
+
 			<circle
 				class="cursor"
 				cx={mazeGame.cursorToScreenCoordinates(cursor.column)}

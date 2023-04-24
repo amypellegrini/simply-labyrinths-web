@@ -34,6 +34,8 @@ export default class MazeGame {
 	onCursorUpdate?: (cursor: Cursor) => void;
 	onLevelUp?: (level: number) => void;
 
+	mazePowerUps: Map<string, string> = new Map<string, string>();
+
 	constructor(onCursorUpdate?: (cursor: Cursor) => void) {
 		const { row, column } = this.startAndEndCells[0];
 
@@ -55,6 +57,11 @@ export default class MazeGame {
 		this.visitedCells.set(this.startAndEndCells[0].id, 1);
 
 		const { row, column } = this.startAndEndCells[0];
+
+		if (this.level === 5) {
+			const cell = this.maze.randomCell();
+			this.mazePowerUps.set(cell.id, 'chalk');
+		}
 
 		this.cursor = {
 			row: row,

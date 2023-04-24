@@ -1,11 +1,14 @@
 <script lang="ts">
 	import PolarGrid from '../../model/PolarGrid';
+	import longestPath from '../../model/longestPath';
 	import recursiveBacktracker from '../../model/recursiveBacktracker';
 
-	const grid = recursiveBacktracker(new PolarGrid(100));
+	const grid = recursiveBacktracker(new PolarGrid(5));
 	const cellSize = 10;
 	const viewBoxSize = 2 * grid.rows * cellSize;
 	const center = viewBoxSize / 2;
+
+	const startAndEndCells = longestPath(grid);
 </script>
 
 <svg style="width: 80vh;" viewBox="-5 -5 {viewBoxSize + 10} {viewBoxSize + 10}">

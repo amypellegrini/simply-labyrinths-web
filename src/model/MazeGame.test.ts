@@ -87,6 +87,14 @@ describe('MazeGame', () => {
 		expect(generateMaze).toHaveBeenCalled();
 	});
 
+	it('can be initialized to a given level', () => {
+		const mazeGame = new MazeGame(2);
+
+		expect(mazeGame.level).toBe(2);
+		expect(mazeGame.rows).toBe(8);
+		expect(mazeGame.columns).toBe(8);
+	});
+
 	it('has a start and end cells', () => {
 		const mazeGame = new MazeGame();
 		const expectedStartAndEndCells = longestPath(mazeGame.maze);

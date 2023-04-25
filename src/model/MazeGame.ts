@@ -36,7 +36,7 @@ export default class MazeGame {
 
 	mazePowerUps: Map<string, string> = new Map<string, string>();
 
-	constructor(onCursorUpdate?: (cursor: Cursor) => void) {
+	constructor(level = 1) {
 		const { row, column } = this.startAndEndCells[0];
 
 		this.visitedCells.set(this.startAndEndCells[0].id, 1);
@@ -46,7 +46,12 @@ export default class MazeGame {
 			column: column
 		};
 
-		this.onCursorUpdate = onCursorUpdate;
+		if (level && level > 1) {
+			this.level = level;
+			this.rows = 5 + (level - 1) * this.rowsAndColumnsDelta;
+			this.columns = 5 + (level - 1) * this.rowsAndColumnsDelta;
+			this.__initLevel();
+		}
 	}
 
 	private __initLevel() {

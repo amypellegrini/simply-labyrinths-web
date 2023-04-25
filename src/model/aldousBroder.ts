@@ -14,7 +14,6 @@ export default function aldousBroder(grid: Grid) {
 		}
 
 		cell = neighbour;
-		console.log(cell);
 	}
 
 	return grid;

@@ -174,12 +174,20 @@
 			{#if mazeGame.mazePowerUps.size > 0}
 				{#each Array.from(mazeGame.mazePowerUps) as [key, value]}
 					{@const [row, column] = key.split('-')}
-					<circle
-						cx={(Number(column) + 1) * cellSize - cellSize / 2}
-						cy={(Number(row) + 1) * cellSize - cellSize / 2}
-						r="7"
+
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						x={Number(column) * cellSize + 3}
+						y={Number(row) * cellSize + 5}
+						viewBox="0 0 24 24"
 						fill="#000099"
-					/>
+						width="24"
+						height="24"
+						><path
+							class="primary"
+							d="M4 14a1 1 0 0 1 .3-.7l11-11a1 1 0 0 1 1.4 0l3 3a1 1 0 0 1 0 1.4l-11 11a1 1 0 0 1-.7.3H5a1 1 0 0 1-1-1v-3z"
+						/></svg
+					>
 				{/each}
 			{/if}
 

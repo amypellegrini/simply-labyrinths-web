@@ -148,6 +148,10 @@ export default class MazeGame {
 		if (nextCell !== currentCell) {
 			this.__cursorState = 'moving';
 
+			if (this.mazePowerUps.has(nextCell.id)) {
+				this.mazePowerUps.delete(nextCell.id);
+			}
+
 			if (this.visitedCells.has(nextCell.id)) {
 				this.scoreDelta = -5;
 			} else {

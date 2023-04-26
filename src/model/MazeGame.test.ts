@@ -441,4 +441,21 @@ describe('MazeGame', () => {
 
 		expect(mazeGame.mazePowerUps.get(powerUpKey)).toEqual('chalk');
 	});
+
+	it('consumes the powerup when the cursor visits it', () => {
+		mockGenerateMaze.mockImplementation(() => {
+			const grid = new Grid(1, 2);
+			grid.grid[0][0].link(grid.grid[0][1], true);
+			return grid;
+		});
+
+		const mazeGame = new MazeGame();
+
+		mazeGame.mazePowerUps.set('0-1', 'chalk');
+
+		mazeGame.moveCursor('right');
+		vi.advanceTimersByTime(10000);
+
+		expect(mazeGame.mazePowerUps.has('0-1')).toBe(false);
+	});
 });

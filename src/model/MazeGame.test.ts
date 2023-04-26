@@ -83,6 +83,7 @@ describe('MazeGame', () => {
 		expect(mazeGame.rowsAndColumnsDelta).toBe(3);
 		expect(mazeGame.cursor.row).toBe(mazeGame.startAndEndCells[0].row);
 		expect(mazeGame.cursor.column).toBe(mazeGame.startAndEndCells[0].column);
+		expect(mazeGame.mazePowerUps.size).toBe(0);
 
 		expect(generateMaze).toHaveBeenCalled();
 	});
@@ -431,5 +432,13 @@ describe('MazeGame', () => {
 
 		expect(mazeGame.score).toBe(-6);
 		expect(mazeGame.scoreDelta).toBe(-5);
+	});
+
+	it('adds a chalk powerup in level 5', () => {
+		const mazeGame = new MazeGame(5);
+
+		const powerUpKey = mazeGame.mazePowerUps.keys().next().value;
+
+		expect(mazeGame.mazePowerUps.get(powerUpKey)).toEqual('chalk');
 	});
 });

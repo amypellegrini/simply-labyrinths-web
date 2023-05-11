@@ -442,7 +442,7 @@ describe('MazeGame', () => {
 		expect(mazeGame.mazePowerUps.get(powerUpKey)).toEqual('chalk');
 	});
 
-	it('consumes the powerup when the cursor visits it', () => {
+	it('picks the chalk powerup when the cursor visits it', () => {
 		mockGenerateMaze.mockImplementation(() => {
 			const grid = new Grid(1, 2);
 			grid.grid[0][0].link(grid.grid[0][1], true);
@@ -453,9 +453,13 @@ describe('MazeGame', () => {
 
 		mazeGame.mazePowerUps.set('0-1', 'chalk');
 
+		expect(mazeGame.powerUps.chalk).toBe(0);
+
 		mazeGame.moveCursor('right');
 		vi.advanceTimersByTime(10000);
 
 		expect(mazeGame.mazePowerUps.has('0-1')).toBe(false);
+		expect(mazeGame.mazePowerUps.get('chalk')).toBe(undefined);
+		expect(mazeGame.powerUps.chalk).toBe(3);
 	});
 });

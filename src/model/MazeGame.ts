@@ -35,6 +35,9 @@ export default class MazeGame {
 	onLevelUp?: (level: number) => void;
 
 	mazePowerUps: Map<string, string> = new Map<string, string>();
+	powerUps = {
+		chalk: 0
+	};
 
 	constructor(level = 1) {
 		const { row, column } = this.startAndEndCells[0];
@@ -150,6 +153,7 @@ export default class MazeGame {
 
 			if (this.mazePowerUps.has(nextCell.id)) {
 				this.mazePowerUps.delete(nextCell.id);
+				this.powerUps.chalk += 3;
 			}
 
 			if (this.visitedCells.has(nextCell.id)) {

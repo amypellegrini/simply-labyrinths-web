@@ -229,10 +229,17 @@
 				unparalleled gaming experience!
 			</p>
 		{/if}
+		{#if mazeGame.powerUps.chalk > 0}
+			Chalk: {mazeGame.powerUps.chalk}
+		{/if}
 	</div>
 </div>
 
 <style>
+	* {
+		font-family: 'Roboto', Arial, Helvetica, sans-serif;
+	}
+
 	h1 {
 		font-size: 1.8rem;
 		text-align: center;
@@ -247,7 +254,6 @@
 	ul,
 	li {
 		font-size: 1rem;
-		font-family: 'Roboto', Arial, Helvetica, sans-serif;
 	}
 
 	p {
@@ -260,7 +266,6 @@
 	}
 
 	.header p {
-		font-family: Arial, Helvetica, sans-serif;
 		text-align: center;
 		margin-bottom: 1rem;
 	}
@@ -281,7 +286,6 @@
 
 	.score-info > p {
 		margin: 0;
-		font-family: sans-serif;
 		text-align: center;
 		font-size: 1.5rem;
 		width: 30%;
@@ -336,7 +340,6 @@
 
 		.score {
 			margin: 0;
-			font-family: sans-serif;
 			text-align: center;
 			font-size: 1.5rem;
 		}

@@ -3,6 +3,8 @@ import generateMaze from './generateMaze';
 import Grid from './grid';
 import longestPath from './longestPath';
 
+type PowerUp = 'chalk';
+
 export type Cursor = {
 	row: number;
 	column: number;
@@ -229,6 +231,12 @@ export default class MazeGame {
 					this.visitedCells.set(nextCell.id, 1);
 				}
 			}
+		}
+	}
+
+	usePowerUp(powerUp: PowerUp) {
+		if (this.powerUps[powerUp] > 0) {
+			this.powerUps[powerUp] -= 1;
 		}
 	}
 }

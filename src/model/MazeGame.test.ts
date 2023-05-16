@@ -462,4 +462,22 @@ describe('MazeGame', () => {
 		expect(mazeGame.mazePowerUps.get('chalk')).toBe(undefined);
 		expect(mazeGame.powerUps.chalk).toBe(3);
 	});
+
+	it("allows to use the chalk powerup when it's available", () => {
+		mockGenerateMaze.mockImplementation(() => {
+			const grid = new Grid(1, 2);
+			grid.grid[0][0].link(grid.grid[0][1], true);
+			return grid;
+		});
+
+		const mazeGame = new MazeGame();
+
+		mazeGame.mazePowerUps.set('0-1', 'chalk');
+		mazeGame.moveCursor('right');
+		vi.advanceTimersByTime(10000);
+
+		mazeGame.usePowerUp('chalk');
+
+		expect(mazeGame.powerUps.chalk).toBe(2);
+	});
 });

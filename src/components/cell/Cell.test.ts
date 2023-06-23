@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 
 import { render, screen } from '@testing-library/svelte';
 
-import { default as CellModel } from '../model/cell';
+import { default as CellModel } from '../../model/cell';
 import Cell from './Cell.svelte';
 
 describe('Cell', () => {

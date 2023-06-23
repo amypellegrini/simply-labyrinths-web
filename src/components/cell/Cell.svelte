@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type Cell from '../model/cell';
+	import type Cell from '../../model/cell';
 
 	export let cell: Cell;
 	export let cellSize = 30;

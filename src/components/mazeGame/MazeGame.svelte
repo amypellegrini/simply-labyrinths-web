@@ -3,7 +3,7 @@
 	import Cell from '../cell/Cell.svelte';
 	import MazeGame, { type Cursor } from '../../model/MazeGame';
 
-	const mazeGame = new MazeGame(5);
+	const mazeGame = new MazeGame(1);
 
 	let cursor: Cursor = mazeGame.cursor;
 	let level: number = mazeGame.level;

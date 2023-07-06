@@ -29,7 +29,7 @@ export default class MazeGame {
 	level = 1;
 	score = 0;
 	scoreDelta = 0;
-	rowsAndColumnsDelta = 3;
+	rowsAndColumnsDelta = 2;
 
 	visitedCells: Map<string, number> = new Map<string, number>();
 
